@@ -7,14 +7,19 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 7f;
     public float sprintMultiplier = 1.5f;
     public float airControl = 0.5f;
+    public float acceleration = 20f;
+    public float airAcceleration = 8f;
 
     [Header("Sprung")]
     public float jumpForce = 8f;
-    public float variableJumpMultiplier = 0.5f;
+    public float variableJumpMultiplier = 0.6f;
     public int maxJumps = 2;
-    public float jumpCooldown = 0.8f; // Cooldown in Sekunden
-    private int jumpsRemaining;
-    private float lastJumpTime = -999f; // Zeitpunkt des letzten Sprungs
+    public float jumpCooldown = 0.2f;
+
+    [Header("Boden-Check")]
+    public Transform groundCheck;
+    public float groundRadius = 0.2f;
+    public LayerMask groundMask = ~0;
 
     [Header("Debug")]
     public bool showDebugInfo = true;
@@ -22,7 +27,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private Vector3 movement;
     private bool isGrounded;
-    private int groundContactCount = 0; // Zählt Bodenkontakte
+    private int jumpsRemaining;
+    private float lastJumpTime = -999f;
 
     void Start()
     {
@@ -30,40 +36,33 @@ public class PlayerMovement : MonoBehaviour
         rb.freezeRotation = true;
         rb.useGravity = true;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+
         jumpsRemaining = maxJumps;
+        if (groundCheck == null)
+        {
+            // Optional: automatisch unter dem Objekt platzieren
+            GameObject gc = new GameObject("GroundCheck");
+            gc.transform.SetParent(transform);
+            gc.transform.localPosition = new Vector3(0f, -0.51f, 0f);
+            groundCheck = gc.transform;
+        }
     }
 
     void Update()
     {
-        // Bewegungs-Input
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveZ = Input.GetAxisRaw("Vertical");
         movement = new Vector3(moveX, 0f, moveZ).normalized;
 
-        // Boden Status basierend auf Kollisionen
-        isGrounded = groundContactCount > 0;
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask, QueryTriggerInteraction.Ignore);
+        if (isGrounded) jumpsRemaining = maxJumps;
 
-        // Sprünge zurücksetzen wenn am Boden
-        if (isGrounded)
-        {
-            jumpsRemaining = maxJumps;
-        }
-
-        // Debug
-        if (showDebugInfo && Input.GetButtonDown("Jump"))
-        {
-            float timeSinceLastJump = Time.time - lastJumpTime;
-            Debug.Log($"Jump! isGrounded: {isGrounded}, Contacts: {groundContactCount}, Jumps: {jumpsRemaining}, Cooldown: {timeSinceLastJump:F2}s");
-        }
-
-        // Sprung mit Cooldown-Prüfung
-        if (Input.GetButtonDown("Jump") && jumpsRemaining > 0 && CanJump())
+        if (Input.GetButtonDown("Jump") && jumpsRemaining > 0 && (Time.time - lastJumpTime) >= jumpCooldown)
         {
             Jump();
         }
 
-        // Variable Sprunghöhe
         if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0f)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y * variableJumpMultiplier, rb.linearVelocity.z);
@@ -72,93 +71,41 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        float currentSpeed = moveSpeed;
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            currentSpeed *= sprintMultiplier;
-        }
+        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? moveSpeed * sprintMultiplier : moveSpeed;
 
-        float controlFactor = isGrounded ? 1f : airControl;
-        Vector3 horizontalMove = movement * currentSpeed * controlFactor * Time.fixedDeltaTime;
-        Vector3 newPosition = rb.position + horizontalMove;
-        newPosition.y = rb.position.y;
-        rb.MovePosition(newPosition);
-    }
+        float control = isGrounded ? 1f : airControl;
+        Vector3 desired = movement * currentSpeed * control;
 
-    bool CanJump()
-    {
-        // Prüfe ob genug Zeit seit dem letzten Sprung vergangen ist
-        return (Time.time - lastJumpTime) >= jumpCooldown;
+        Vector3 vel = rb.linearVelocity;
+        Vector3 horiz = new Vector3(vel.x, 0f, vel.z);
+
+        float accel = isGrounded ? acceleration : airAcceleration;
+        Vector3 newHoriz = Vector3.MoveTowards(horiz, desired, accel * Time.fixedDeltaTime);
+
+        rb.linearVelocity = new Vector3(newHoriz.x, vel.y, newHoriz.z);
     }
 
     void Jump()
     {
+        // Vertikale Komponente nullen, dann Impuls
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        
+
         jumpsRemaining--;
-        lastJumpTime = Time.time; // Speichere Zeitpunkt des Sprungs
-        
+        lastJumpTime = Time.time;
+
         if (showDebugInfo)
         {
-            Debug.Log($"GESPRUNGEN! Verbleibend: {jumpsRemaining}, Nächster Sprung in: {jumpCooldown}s");
+            Debug.Log($"Sprung! Verbleibend: {jumpsRemaining}");
         }
     }
 
-    // Kollisions-Erkennung
-    void OnCollisionEnter(Collision collision)
+    void OnDrawGizmosSelected()
     {
-        // Prüfe ob Kollision von unten kommt
-        foreach (ContactPoint contact in collision.contacts)
+        if (groundCheck != null)
         {
-            if (contact.normal.y > 0.5f) // Boden-Kollision
-            {
-                groundContactCount++;
-                if (showDebugInfo)
-                {
-                    Debug.Log($"Boden berührt! Contacts: {groundContactCount}");
-                }
-                break;
-            }
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(groundCheck.position, groundRadius);
         }
-    }
-
-    void OnCollisionStay(Collision collision)
-    {
-        // Stelle sicher dass wir am Boden bleiben
-        bool hasGroundContact = false;
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            if (contact.normal.y > 0.5f)
-            {
-                hasGroundContact = true;
-                break;
-            }
-        }
-        
-        if (!hasGroundContact && groundContactCount > 0)
-        {
-            groundContactCount--;
-        }
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        // Prüfe ob wir den Boden verlassen
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            if (contact.normal.y > 0.5f)
-            {
-                groundContactCount--;
-                if (showDebugInfo)
-                {
-                    Debug.Log($"Boden verlassen! Contacts: {groundContactCount}");
-                }
-                break;
-            }
-        }
-        
-        // Sicherheit: Nie unter 0
-        if (groundContactCount < 0) groundContactCount = 0;
     }
 }
