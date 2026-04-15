@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ec3e8d994c3033d4c9026a62047d6823
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 183767
+  packageName: Dynamic Camera Project
+  packageVersion: 1.0
+  assetPath: Assets/EveldTech/DynamicCamera/DemoAssets/Materials/BasicMat8.mat
+  uploadId: 403192

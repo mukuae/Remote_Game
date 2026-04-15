@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6cf90bbeec94f374092ddc0d0bccea6e
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 183767
+  packageName: Dynamic Camera Project
+  packageVersion: 1.0
+  assetPath: Assets/EveldTech/DynamicCamera/Scripts/Eveld.DynamicCamera.asmdef
+  uploadId: 403192

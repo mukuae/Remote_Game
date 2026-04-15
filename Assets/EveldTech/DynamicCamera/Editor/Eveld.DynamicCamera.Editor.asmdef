@@ -1,0 +1,17 @@
+{
+    "name": "Eveld.DynamicCamera.Editor",
+    "references": [
+        "GUID:6cf90bbeec94f374092ddc0d0bccea6e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

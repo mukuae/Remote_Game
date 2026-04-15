@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 84660b53d7f0b2d4d8856bf395850e84
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 183767
+  packageName: Dynamic Camera Project
+  packageVersion: 1.0
+  assetPath: Assets/EveldTech/DynamicCamera/Scripts/DynamicCamera/DynamicCameraEffector/DCTorusEffector.cs
+  uploadId: 403192

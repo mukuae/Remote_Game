@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 606d0f1e141491a45ad810ce57463479
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 183767
+  packageName: Dynamic Camera Project
+  packageVersion: 1.0
+  assetPath: Assets/EveldTech/DynamicCamera/Scripts/DynamicCamera/DynamicCameraEffector/DCPropertiesContainer.cs
+  uploadId: 403192

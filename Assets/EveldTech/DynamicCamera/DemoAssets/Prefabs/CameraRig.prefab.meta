@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e3d0ecadd6068c94ab3ea3c9160f70e7
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 183767
+  packageName: Dynamic Camera Project
+  packageVersion: 1.0
+  assetPath: Assets/EveldTech/DynamicCamera/DemoAssets/Prefabs/CameraRig.prefab
+  uploadId: 403192
