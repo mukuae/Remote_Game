@@ -286,14 +286,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2008144139}
-  - {fileID: 241778059}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &241778059 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2199778758489505572, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
-  m_PrefabInstance: {fileID: 1325075675}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &836086619 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2199778757520559450, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
@@ -476,7 +470,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 93795552}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8700709806587242195, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: targetRigidbody
@@ -494,17 +488,21 @@ PrefabInstance:
       propertyPath: dynamicCameraFunctions.ignoreRayLayerMask.m_Bits
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2199778757520559448, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
+      propertyPath: m_ClearFlags
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2199778758489505572, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.32999998
+      value: 0.67
       objectReference: {fileID: 0}
     - target: {fileID: 2199778758489505572, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1500001
+      value: 4.15
       objectReference: {fileID: 0}
     - target: {fileID: 2199778758489505572, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.62
+      value: -4.12
       objectReference: {fileID: 0}
     - target: {fileID: 2199778758489505572, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -554,6 +552,307 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 836086621}
   m_SourcePrefab: {fileID: 100100000, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
+--- !u!1 &1959156069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1959156071}
+  - component: {fileID: 1959156070}
+  m_Layer: 0
+  m_Name: DCEffectorManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1959156070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959156069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64260060cbac10845ac7f771ec26d20f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Eveld.DynamicCamera::Eveld.DynamicCamera.DCEffectorManager
+  circleEffectorList: []
+  semiCircleEffectorList: []
+  torusEffectorList: []
+  semiTorusEffectorList: []
+  boxEffectorList: []
+  multiEffectorList:
+  - isEnabled: 1
+    name: Multi Effector
+    rootPosition: {x: 37.646976, y: 7.733187}
+    featherAmount: 0
+    invertFeatherRegion: 0
+    repel: 0
+    invertStrength: 0
+    distanceFromCenterEqualsStrength: 0
+    unilateralDisplacement: 0
+    boundsTopRight: {x: 35.444553, y: 24.022652}
+    boundsBottomLeft: {x: -18.909277, y: -16.82051}
+    useRegionAsBounds: 0
+    effectorBoundaryRegion:
+      points:
+      - {x: 32.646976, y: 2.7331872}
+      - {x: 32.646976, y: 12.733187}
+      - {x: 42.646976, y: 12.733187}
+      - {x: 42.646976, y: 2.7331872}
+      rootPosition: {x: 37.646976, y: 7.733187}
+    useStartAndEndCaps: 1
+    useAsLoop: 0
+    useFastRoughBoundingBox: 0
+    pathDataList:
+    - point: {x: 1.5223129, y: 3.5901098}
+      bisector: {x: 0, y: 0}
+      strength: 0
+      depthStrength: 0
+      desiredDistanceOutwards: 20.432587
+      desiredDistancePivot: 5
+      currentDistancePivot: 5
+    - point: {x: 16.282322, y: 2.9050994}
+      bisector: {x: 0.026535287, y: 0.99964786}
+      strength: 0
+      depthStrength: 0
+      desiredDistanceOutwards: 2.6942039
+      desiredDistancePivot: 7.5289764
+      currentDistancePivot: 7.5289764
+    - point: {x: 32.640244, y: 2.795448}
+      bisector: {x: 0, y: 0}
+      strength: 0
+      depthStrength: 0
+      desiredDistanceOutwards: 2.805311
+      desiredDistancePivot: 5
+      currentDistancePivot: 5
+    boxEffectorList:
+    - isEnabled: 1
+      name: Effector
+      rootPosition: {x: 37.646976, y: 7.733187}
+      featherAmount: 0
+      invertFeatherRegion: 0
+      repel: 0
+      invertStrength: 0
+      distanceFromCenterEqualsStrength: 0
+      unilateralDisplacement: 0
+      boundsTopRight: {x: 16.266344, y: 24.000729}
+      boundsBottomLeft: {x: 0.5750582, y: -16.820507}
+      useRegionAsBounds: 0
+      effectorBoundaryRegion:
+        points:
+        - {x: 32.646976, y: 2.7331872}
+        - {x: 32.646976, y: 12.733187}
+        - {x: 42.646976, y: 12.733187}
+        - {x: 42.646976, y: 2.7331872}
+        rootPosition: {x: 37.646976, y: 7.733187}
+      position1: {x: 1.5223129, y: 3.5901098}
+      position2: {x: 16.133131, y: 2.9120233}
+      distance1: 20.432587
+      distance2: 2.8734584
+      positionDistanceHandle1A: {x: 2.4695675, y: 24.000729}
+      positionDistanceHandle1B: {x: 0.5750582, y: -16.820507}
+      positionDistanceHandle2A: {x: 16.266344, y: 5.7823925}
+      positionDistanceHandle2B: {x: 15.999918, y: 0.04165411}
+      strength1: 0
+      strength2: 0
+      depthStrength1: 0
+      depthStrength2: 0
+    - isEnabled: 1
+      name: Effector
+      rootPosition: {x: 37.646976, y: 7.733187}
+      featherAmount: 0
+      invertFeatherRegion: 0
+      repel: 0
+      invertStrength: 0
+      distanceFromCenterEqualsStrength: 0
+      unilateralDisplacement: 0
+      boundsTopRight: {x: 32.659046, y: 5.600696}
+      boundsBottomLeft: {x: 16.413582, y: -0.009799957}
+      useRegionAsBounds: 0
+      effectorBoundaryRegion:
+        points:
+        - {x: -5, y: -5}
+        - {x: -5, y: 5}
+        - {x: 5, y: 5}
+        - {x: 5, y: -5}
+        rootPosition: {x: 0, y: 0}
+      position1: {x: 16.431648, y: 2.9040985}
+      position2: {x: 32.640244, y: 2.795448}
+      distance1: 2.695218
+      distance2: 2.805311
+      positionDistanceHandle1A: {x: 16.449715, y: 5.599256}
+      positionDistanceHandle1B: {x: 16.413582, y: 0.20894098}
+      positionDistanceHandle2A: {x: 32.659046, y: 5.600696}
+      positionDistanceHandle2B: {x: 32.62144, y: -0.009799957}
+      strength1: 0
+      strength2: 0
+      depthStrength1: 0
+      depthStrength2: 0
+    semiTorusEffectorList:
+    - isEnabled: 1
+      name: Effector
+      rootPosition: {x: 37.646976, y: 7.733187}
+      featherAmount: 0
+      invertFeatherRegion: 0
+      repel: 0
+      invertStrength: 0
+      distanceFromCenterEqualsStrength: 0
+      unilateralDisplacement: 0
+      boundsTopRight: {x: 1.5223129, y: 3.5901098}
+      boundsBottomLeft: {x: 1.5223129, y: 3.5901098}
+      useRegionAsBounds: 0
+      effectorBoundaryRegion:
+        points:
+        - {x: 32.646976, y: 2.7331872}
+        - {x: 32.646976, y: 12.733187}
+        - {x: 42.646976, y: 12.733187}
+        - {x: 42.646976, y: 2.7331872}
+        rootPosition: {x: 37.646976, y: 7.733187}
+      positionCenterOfRotation: {x: 1.5223129, y: 3.5901098}
+      positionCenterRadiusHandle1: {x: 1.5223129, y: 3.5901098}
+      positionCenterRadiusHandle2: {x: 1.5223129, y: 3.5901098}
+      distanceOutward1: 0
+      distanceOutward2: 0
+      strength1: 0
+      depthStrength1: 0
+      strength2: 0
+      depthStrength2: 0
+      strengthCenter: 0
+      depthStrengthCenter: 0
+    - isEnabled: 1
+      name: Effector
+      rootPosition: {x: 37.646976, y: 7.733187}
+      featherAmount: 0
+      invertFeatherRegion: 0
+      repel: 0
+      invertStrength: 0
+      distanceFromCenterEqualsStrength: 0
+      unilateralDisplacement: 0
+      boundsTopRight: {x: 16.450909, y: 5.7823915}
+      boundsBottomLeft: {x: 15.999918, y: 0.030704498}
+      useRegionAsBounds: 0
+      effectorBoundaryRegion:
+        points:
+        - {x: 32.646976, y: 2.7331872}
+        - {x: 32.646976, y: 12.733187}
+        - {x: 42.646976, y: 12.733187}
+        - {x: 42.646976, y: 2.7331872}
+        rootPosition: {x: 37.646976, y: 7.733187}
+      positionCenterOfRotation: {x: 16.482105, y: 10.431425}
+      positionCenterRadiusHandle1: {x: 16.431648, y: 2.9040985}
+      positionCenterRadiusHandle2: {x: 16.133131, y: 2.9120226}
+      distanceOutward1: 2.695218
+      distanceOutward2: 2.8734584
+      strength1: 0
+      depthStrength1: 0
+      strength2: 0
+      depthStrength2: 0
+      strengthCenter: 0
+      depthStrengthCenter: 0
+    - isEnabled: 1
+      name: Effector
+      rootPosition: {x: 37.646976, y: 7.733187}
+      featherAmount: 0
+      invertFeatherRegion: 0
+      repel: 0
+      invertStrength: 0
+      distanceFromCenterEqualsStrength: 0
+      unilateralDisplacement: 0
+      boundsTopRight: {x: 32.640244, y: 2.795448}
+      boundsBottomLeft: {x: 32.640244, y: 2.795448}
+      useRegionAsBounds: 0
+      effectorBoundaryRegion:
+        points:
+        - {x: -5, y: -5}
+        - {x: -5, y: 5}
+        - {x: 5, y: 5}
+        - {x: 5, y: -5}
+        rootPosition: {x: 0, y: 0}
+      positionCenterOfRotation: {x: 32.640244, y: 2.795448}
+      positionCenterRadiusHandle1: {x: 32.640244, y: 2.795448}
+      positionCenterRadiusHandle2: {x: 32.640244, y: 2.795448}
+      distanceOutward1: 0
+      distanceOutward2: 0
+      strength1: 0
+      depthStrength1: 0
+      strength2: 0
+      depthStrength2: 0
+      strengthCenter: 0
+      depthStrengthCenter: 0
+    startAndEndCapEffectors:
+    - isEnabled: 1
+      name: Effector
+      rootPosition: {x: 37.646976, y: 7.733187}
+      featherAmount: 0
+      invertFeatherRegion: 0
+      repel: 0
+      invertStrength: 0
+      distanceFromCenterEqualsStrength: 0
+      unilateralDisplacement: 0
+      boundsTopRight: {x: 2.4695675, y: 24.022652}
+      boundsBottomLeft: {x: -18.909277, y: -16.82051}
+      useRegionAsBounds: 0
+      effectorBoundaryRegion:
+        points:
+        - {x: 32.646976, y: 2.7331872}
+        - {x: 32.646976, y: 12.733187}
+        - {x: 42.646976, y: 12.733187}
+        - {x: 42.646976, y: 2.7331872}
+        rootPosition: {x: 37.646976, y: 7.733187}
+      positionCenter: {x: 1.5233119, y: 3.5900636}
+      positionRadiusHandle1: {x: 2.4695675, y: 24.000727}
+      strength: 0
+      depthStrength: 0
+      displacementCanCrossCenter: 0
+      positionRadiusHandle2: {x: 0.5750583, y: -16.820507}
+      useFastRoughBoundingBox: 0
+    - isEnabled: 1
+      name: Effector
+      rootPosition: {x: 37.646976, y: 7.733187}
+      featherAmount: 0
+      invertFeatherRegion: 0
+      repel: 0
+      invertStrength: 0
+      distanceFromCenterEqualsStrength: 0
+      unilateralDisplacement: 0
+      boundsTopRight: {x: 35.444553, y: 5.6006956}
+      boundsBottomLeft: {x: 32.62144, y: -0.009855986}
+      useRegionAsBounds: 0
+      effectorBoundaryRegion:
+        points:
+        - {x: 32.646976, y: 2.7331872}
+        - {x: 32.646976, y: 12.733187}
+        - {x: 42.646976, y: 12.733187}
+        - {x: 42.646976, y: 2.7331872}
+        rootPosition: {x: 37.646976, y: 7.733187}
+      positionCenter: {x: 32.639244, y: 2.7954547}
+      positionRadiusHandle1: {x: 32.659046, y: 5.6006956}
+      strength: 0
+      depthStrength: 0
+      displacementCanCrossCenter: 0
+      positionRadiusHandle2: {x: 32.62144, y: -0.009799719}
+      useFastRoughBoundingBox: 0
+--- !u!4 &1959156071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959156069}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15.84811, y: 0, z: 13.0983}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2008144137
 GameObject:
   m_ObjectHideFlags: 0
@@ -1790,4 +2089,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1314635481}
   - {fileID: 93795552}
+  - {fileID: 1325075675}
   - {fileID: 127654319627636561}
+  - {fileID: 1959156071}
