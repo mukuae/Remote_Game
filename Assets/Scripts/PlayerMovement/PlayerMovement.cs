@@ -16,6 +16,9 @@ public class PlayerMovement : MonoBehaviour
     public int maxJumps = 2;
     public float jumpCooldown = 0.2f;
 
+    bool isGroundedad;
+    
+
     [Header("Boden-Check")]
     public Transform groundCheck;
     public float groundRadius = 0.2f;
@@ -26,7 +29,6 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private Vector3 movement;
-    private bool isGrounded;
     private int jumpsRemaining;
     private float lastJumpTime = -999f;
 
@@ -55,10 +57,9 @@ public class PlayerMovement : MonoBehaviour
         float moveZ = Input.GetAxisRaw("Vertical");
         movement = new Vector3(moveX, 0f, moveZ).normalized;
 
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask, QueryTriggerInteraction.Ignore);
-        if (isGrounded) jumpsRemaining = maxJumps;
 
-        if (Input.GetButtonDown("Jump") && jumpsRemaining > 0 && (Time.time - lastJumpTime) >= jumpCooldown)
+
+        if (Input.GetButtonDown("Jump") && jumpsRemaining > 0 && isGroundedad == true)
         {
             Jump();
         }
@@ -73,16 +74,20 @@ public class PlayerMovement : MonoBehaviour
     {
         float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? moveSpeed * sprintMultiplier : moveSpeed;
 
-        float control = isGrounded ? 1f : airControl;
-        Vector3 desired = movement * currentSpeed * control;
+        
+      
 
         Vector3 vel = rb.linearVelocity;
         Vector3 horiz = new Vector3(vel.x, 0f, vel.z);
 
-        float accel = isGrounded ? acceleration : airAcceleration;
-        Vector3 newHoriz = Vector3.MoveTowards(horiz, desired, accel * Time.fixedDeltaTime);
+       
+      
 
-        rb.linearVelocity = new Vector3(newHoriz.x, vel.y, newHoriz.z);
+     
+
+        //isGroundedad = Physics.OverlapSphere(groundCheck.position,groundRadius,groundMask);
+        isGroundedad = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask);
+        Debug.Log("isGrounded= "+isGroundedad.ToString());
     }
 
     void Jump()
