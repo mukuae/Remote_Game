@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
 
         // Achtung: in "normalem" Rigidbody heißt es rb.velocity, nicht rb.linearVelocity
-        rb.velocity = new Vector3(move.x * moveSpeed, rb.velocity.y, move.z * moveSpeed);
+        rb.linearVelocity = new Vector3(move.x * moveSpeed, rb.linearVelocity.y, move.z * moveSpeed);
     }
 
     void Jump()
