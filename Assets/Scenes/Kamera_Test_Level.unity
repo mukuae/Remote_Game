@@ -511,24 +511,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2602d340cfbbc349997285b8f5fa229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraRig: {fileID: 241778059}
-  cameraToShake: {fileID: 836086624}
-  strength: 0
-  strengthDecayTime: 1
-  strengthRampUpTime: 0.1
-  shakeSpeed: 10
-  xAmplitude: 1
-  yAmplitude: 1
-  zAmplitude: 4
-  pitchAmplitude: 10
-  yawAmplitude: 10
-  rollAmplitude: 10
-  xSpeedFactor: 1
-  ySpeedFactor: 1
-  zSpeedFactor: 1
-  pitchSpeedFactor: 1
-  yawSpeedFactor: 1
-  rollSpeedFactor: 1
 --- !u!114 &393344171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -541,46 +523,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a902c9d1dc37e7447a533b24b0c540f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraTracker:
-    smoothTimeX: 0.15
-    smoothTimeY: 0.15
-    smoothTimeZ: 0.15
-    dampingRatioX: 0.5
-    dampingRatioY: 0.5
-    dampingRatioZ: 0.5
-    maxFollowDistanceX: 100
-    maxFollowDistanceY: 100
-    maxFollowDistanceZ: 100
-    antiOvershootX: 0
-    antiOvershootY: 0
-    accelerationThresholdX: 100
-    accelerationThresholdY: 100
-    linkThresholdXtoY: 0
-    accelerationOverThresholdIsZero: 0
-    trackerPosition: {x: 0, y: 0, z: 0}
-    trackerVelocity: {x: 0, y: 0, z: 0}
-  orthoSizeSmoother:
-    smoothTime: 0.15
-    dampingRatio: 0.5
-    maxFollowDistance: 100
-    position: 0
-    velocity: 0
-  dynamicCameraFunctions:
-    lookAheadTimeFirst: 1
-    lookAheadTimeSecond: 1
-    ignoreRayLayerMask:
-      m_Bits: 0
-    leadLagMaxDistanceX: 0
-    leadLagMaxDistanceY: 0
-    leadLagMaxAtVelocity: 5
-    leadLagBoxClamp: 1
-  targetRigidbody: {fileID: 2008144138}
-  cameraRig: {fileID: 241778059}
-  currentCamera: {fileID: 836086624}
-  useUnderDampedSmoothing: 0
-  cameraTargetoffset: {x: 0, y: 0}
-  cameraRigPositionOffsetZ: 0
-  intialCameraOrthoSize: 1
 --- !u!1 &723385196
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,13 +626,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 836086619}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.36471426, z: 0, w: 0.9311195}
+  m_LocalRotation: {x: 0, y: 0.06818943, z: 0, w: 0.9976724}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 241778059}
-  m_LocalEulerAnglesHint: {x: 0, y: 42.78, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 7.82, z: 0}
 --- !u!81 &836086623
 AudioListener:
   m_ObjectHideFlags: 0
@@ -732,7 +674,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 81.6
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -774,9 +716,13 @@ PrefabInstance:
       propertyPath: dynamicCameraFunctions.ignoreRayLayerMask.m_Bits
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2199778757520559448, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
+      propertyPath: field of view
+      value: 81.6
+      objectReference: {fileID: 0}
     - target: {fileID: 2199778757520559455, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9311195
+      value: 0.9976724
       objectReference: {fileID: 0}
     - target: {fileID: 2199778757520559455, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalRotation.x
@@ -784,7 +730,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2199778757520559455, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.36471426
+      value: 0.06818943
       objectReference: {fileID: 0}
     - target: {fileID: 2199778757520559455, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalRotation.z
@@ -792,7 +738,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2199778757520559455, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 42.78
+      value: 7.82
       objectReference: {fileID: 0}
     - target: {fileID: 2199778758489505572, guid: e3d0ecadd6068c94ab3ea3c9160f70e7, type: 3}
       propertyPath: m_LocalPosition.x

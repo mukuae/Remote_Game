@@ -41,14 +41,18 @@ public class PlayerController : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
-        rb.linearVelocity = new Vector3(move.x * moveSpeed, rb.linearVelocity.y, move.z * moveSpeed);
+
+        // Achtung: in "normalem" Rigidbody heißt es rb.velocity, nicht rb.linearVelocity
+        rb.velocity = new Vector3(move.x * moveSpeed, rb.velocity.y, move.z * moveSpeed);
     }
 
     void Jump()
     {
+        // Springen nur erlauben, wenn man auf dem Boden ist
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false; // Direkt nach dem Sprung auf "in der Luft" setzen
         }
     }
 
@@ -69,8 +73,9 @@ public class PlayerController : MonoBehaviour
         cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
     }
 
-    void OnCollisionStay(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
+        // Wenn wir den Boden berühren, sind wir wieder "grounded"
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
