@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Bewegung")]
     public float moveSpeed = 7f;
     public float sprintMultiplier = 1.5f;
-    public float airControl = 0.5f;
+    public float airControl = 0.2f;
     public float acceleration = 20f;
     public float airAcceleration = 8f;
 
@@ -106,6 +106,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(groundCheck.position, groundRadius);
+            Debug.Log(groundCheck);
         }
     }
 }
