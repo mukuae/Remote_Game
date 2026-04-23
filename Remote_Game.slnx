@@ -1,6 +1,11 @@
 ﻿<Solution>
+  <Project Path="Eveld.DynamicCamera.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+<<<<<<< Updated upstream
   <Project Path="sc.terrain.painter.editor.csproj" />
   <Project Path="sc.terrain.painter.runtime.csproj" />
+=======
+  <Project Path="Eveld.DynamicCamera.Editor.csproj" />
+>>>>>>> Stashed changes
 </Solution>
