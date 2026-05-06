@@ -13,6 +13,10 @@ public class SpielerMovement : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
+    [Header("Debug Position Check")]
+    public Vector3 targetPosition = new Vector3(10f, 0f, 10f);
+    public float positionTolerance = 0.5f;
+
     private Rigidbody rb;
     private bool isGrounded;
 
@@ -34,6 +38,13 @@ public class SpielerMovement : MonoBehaviour
     {
         // Ground Check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        // Check ob Position mit Ziel-Koordinaten übereinstimmt
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        if (distance <= positionTolerance)
+        {
+            Debug.Log("*** MATCH! Ziel-Position erreicht! ***");
+        }
 
         // Bewegung (WASD)
         float horizontal = Input.GetAxis("Horizontal");
