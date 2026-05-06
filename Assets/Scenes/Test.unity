@@ -280,7 +280,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  targetPosition: {x: 10, y: 0, z: 10}
+  targetPosition: {x: -10, y: 1, z: -10}
   positionTolerance: 0.5
 --- !u!1 &337323103
 GameObject:
