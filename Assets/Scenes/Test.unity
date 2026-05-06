@@ -254,7 +254,7 @@ Transform:
   m_GameObject: {fileID: 93795546}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7, y: 2.5, z: -17.5}
+  m_LocalPosition: {x: -7.39, y: 2.5, z: -17.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -280,7 +280,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  targetPosition: {x: -10, y: 1, z: -10}
+  targetPosition: {x: 10, y: 0, z: 10}
   positionTolerance: 0.5
 --- !u!1 &337323103
 GameObject:
@@ -720,7 +720,7 @@ Transform:
   m_GameObject: {fileID: 6827181716689291155}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -40.3, y: 0.9, z: -12.9}
+  m_LocalPosition: {x: -6.3, y: 1.6, z: -12.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
