@@ -541,13 +541,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 372572482}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e0d91cada5a83f408a424c45fd19fc7, type: 3}
+  m_Script: {fileID: 11500000, guid: 66df8954e832f2f45be8650429ff1902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtendedTrigger
-  triggerSize: {x: 1.1, y: 119.6, z: 0.95}
-  triggerOffset: {x: 0, y: -35.18, z: 0}
+  triggerSize: {x: 1.05, y: 137.3, z: 2}
+  triggerOffset: {x: 0, y: -65.16, z: 0}
+  jumpForce: 10
+  useRigidbody: 1
   playerLayer:
-    m_Bits: 0
+    serializedVersion: 2
+    m_Bits: 8
   showGizmo: 1
 --- !u!1 &1314635478
 GameObject:
