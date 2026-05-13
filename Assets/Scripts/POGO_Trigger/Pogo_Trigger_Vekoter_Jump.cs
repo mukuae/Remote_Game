@@ -2,37 +2,27 @@
 
 public class ExtendedTrigger : MonoBehaviour
 {
-    public enum ReferenceMode
-    {
-        Point,  // fester Punkt
-        Line    // Linie/Segment
-    }
+    public enum ReferenceMode { Point, Line }
 
-    [Header("Trigger Settings")]
-    public Vector3 triggerSize = new Vector3(2f, 3f, 2f);
-    public Vector3 triggerOffset = new Vector3(0f, 1f, 0f);
+    public Vector2 triggerSizeXZ = new Vector2(2f, 2f);
+    public float triggerHeightY = 3f;
 
-    [Header("Reference (Point or Line)")]
+    public Vector3 triggerOffset = Vector3.zero;
+
     public ReferenceMode referenceMode = ReferenceMode.Point;
-
-    // POINT: relativer Offset vom Transform (lokal) zur Referenz
     public Vector3 pointLocalOffset = Vector3.zero;
-
-    // LINE: lokale Start-/Endpunkte relativ zum Transform (z. B. Kantenpunkte der Plattform)
     public Vector3 lineLocalStart = new Vector3(-0.5f, 0f, 0f);
     public Vector3 lineLocalEnd = new Vector3(0.5f, 0f, 0f);
 
-    [Header("Player Push Settings")]
-    public float pushImpulse = 10f;        // Stärke des Impulses
-    public bool onlyHorizontal = true;     // Y ignorieren?
-    public bool moveTowardRef = false;     // false = vom Referenzpunkt weg, true = hin zum Referenzpunkt
+    public float pushImpulse = 10f;
+    public bool onlyHorizontal = true;
+    public bool moveTowardReference = false;
 
-    [Header("Debug / Gizmos")]
     public bool showGizmo = true;
     public Color gizmoTriggerFill = new Color(0f, 1f, 0f, 0.25f);
     public Color gizmoTriggerWire = Color.green;
     public Color gizmoPoint = Color.red;
-    public Color gizmoLine = Color.magenta;
+    public Color gizmoLine = new Color(1f, 0.5f, 0f);
     public Color gizmoVector = Color.cyan;
 
     private BoxCollider triggerCollider;
@@ -41,73 +31,51 @@ public class ExtendedTrigger : MonoBehaviour
 
     void Start()
     {
-        // Trigger-Collider anlegen
-        triggerCollider = gameObject.AddComponent<BoxCollider>();
+        EnsureTriggerColliderSetup();
+    }
+
+    void EnsureTriggerColliderSetup()
+    {
+        triggerCollider = GetComponent<BoxCollider>();
+        if (triggerCollider == null) triggerCollider = gameObject.AddComponent<BoxCollider>();
         triggerCollider.isTrigger = true;
-        triggerCollider.size = triggerSize;
-        triggerCollider.center = triggerOffset;
+        triggerCollider.size = new Vector3(triggerSizeXZ.x, triggerHeightY, triggerSizeXZ.y);
+
+        Vector3 objCenterWorld = transform.position;
+        Vector3 worldOffset = transform.right * triggerOffset.x + Vector3.up * triggerOffset.y + transform.forward * triggerOffset.z;
+        Vector3 triggerCenterWorld = objCenterWorld + worldOffset;
+        triggerCollider.center = transform.InverseTransformPoint(triggerCenterWorld);
     }
 
     void Update()
     {
-        if (currentPlayer != null && Input.GetKeyDown(KeyCode.Space))
-        {
-            ApplyImpulseToPlayer();
-        }
+        if (currentPlayer != null && Input.GetKeyDown(KeyCode.Space)) ApplyImpulseToPlayer();
     }
 
     void ApplyImpulseToPlayer()
     {
         if (currentPlayerRb == null) return;
-
-        // Referenzpunkt bestimmen (je nach Modus)
-        Vector3 refPos = GetReferenceWorldPosition();
-
-        // Vektor von Referenz → Spieler
+        Vector3 refPos = GetReferencePosition(currentPlayer.position);
         Vector3 v = currentPlayer.position - refPos;
-
         if (onlyHorizontal) v.y = 0f;
-
-        // Richtung wählen: vom Referenzpunkt weg (Standard) oder hin
-        if (moveTowardRef) v = -v;
-
-        if (v.sqrMagnitude < 0.0001f) return;
-
+        if (moveTowardReference) v = -v;
+        if (v.sqrMagnitude < 1e-6f) return;
         currentPlayerRb.AddForce(v.normalized * pushImpulse, ForceMode.Impulse);
-        Debug.Log($"Impulse to Player. refMode={referenceMode}, refPos={refPos}, dir={v.normalized}, impulse={pushImpulse}");
     }
 
-    // Ermittelt die Weltposition des Referenzpunkts (Punkt oder nächster Punkt auf der Linie)
-    Vector3 GetReferenceWorldPosition()
+    Vector3 GetReferencePosition(Vector3 playerWorldPos)
     {
-        if (referenceMode == ReferenceMode.Point)
-        {
-            // lokaler Punkt → Welt
-            return transform.TransformPoint(pointLocalOffset);
-        }
-        else // ReferenceMode.Line
-        {
-            // lokale Linienpunkte → Welt
-            Vector3 a = transform.TransformPoint(lineLocalStart);
-            Vector3 b = transform.TransformPoint(lineLocalEnd);
-
-            // Wenn kein Player vorhanden, gib einfach Linienmittelpunkt zurück (z. B. für Gizmos)
-            if (currentPlayer == null) return (a + b) * 0.5f;
-
-            // Nächstgelegenen Punkt auf der Linie (a→b) zu Spieler finden
-            Vector3 p = currentPlayer.position;
-            Vector3 closest = ClosestPointOnSegment(a, b, p);
-            return closest;
-        }
+        if (referenceMode == ReferenceMode.Point) return transform.TransformPoint(pointLocalOffset);
+        Vector3 a = transform.TransformPoint(lineLocalStart);
+        Vector3 b = transform.TransformPoint(lineLocalEnd);
+        return ClosestPointOnSegment(a, b, playerWorldPos);
     }
 
-    // Mathe-Helfer: Nächster Punkt auf einem Liniensegment
     static Vector3 ClosestPointOnSegment(Vector3 a, Vector3 b, Vector3 p)
     {
         Vector3 ab = b - a;
         float abLenSqr = Vector3.SqrMagnitude(ab);
-        if (abLenSqr < 1e-6f) return a; // degeneriertes Segment
-
+        if (abLenSqr < 1e-8f) return a;
         float t = Vector3.Dot(p - a, ab) / abLenSqr;
         t = Mathf.Clamp01(t);
         return a + t * ab;
@@ -115,100 +83,92 @@ public class ExtendedTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            currentPlayer = other.transform;
-            currentPlayerRb = other.attachedRigidbody;
-            Debug.Log("Player im Trigger. SPACE drückt einen Impuls auf den Player (vom gewählten Referenzpunkt aus).");
-        }
+        if (!other.CompareTag("Player")) return;
+        currentPlayer = other.transform;
+        currentPlayerRb = other.attachedRigidbody;
     }
 
     void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            if (currentPlayer == null) currentPlayer = other.transform;
-            if (currentPlayerRb == null) currentPlayerRb = other.attachedRigidbody;
-        }
+        if (!other.CompareTag("Player")) return;
+        if (currentPlayer == null) currentPlayer = other.transform;
+        if (currentPlayerRb == null) currentPlayerRb = other.attachedRigidbody;
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            currentPlayer = null;
-            currentPlayerRb = null;
-        }
+        if (!other.CompareTag("Player")) return;
+        currentPlayer = null;
+        currentPlayerRb = null;
     }
 
-    // Gizmos zur Visualisierung
+    void OnValidate()
+    {
+        if (Application.isEditor && !Application.isPlaying) EnsureTriggerColliderSetup();
+    }
+
     void OnDrawGizmos()
     {
         if (!showGizmo) return;
 
-        // Trigger-Volumen
+        if (triggerCollider == null) triggerCollider = GetComponent<BoxCollider>();
+
+        Vector3 objCenterWorld = transform.position;
+        Vector3 worldOffset = transform.right * triggerOffset.x + Vector3.up * triggerOffset.y + transform.forward * triggerOffset.z;
+        Vector3 triggerCenterWorld = objCenterWorld + worldOffset;
+        Vector3 centerLocalPreview = transform.InverseTransformPoint(triggerCenterWorld);
+
+        Vector3 size = (triggerCollider != null)
+            ? triggerCollider.size
+            : new Vector3(triggerSizeXZ.x, triggerHeightY, triggerSizeXZ.y);
+
         Gizmos.color = gizmoTriggerFill;
         Gizmos.matrix = transform.localToWorldMatrix;
-        Gizmos.DrawCube(triggerOffset, triggerSize);
+        Gizmos.DrawCube(centerLocalPreview, size);
         Gizmos.color = gizmoTriggerWire;
-        Gizmos.DrawWireCube(triggerOffset, triggerSize);
+        Gizmos.DrawWireCube(centerLocalPreview, size);
 
         Gizmos.matrix = Matrix4x4.identity;
 
-        // Referenz anzeigen
         if (referenceMode == ReferenceMode.Point)
         {
-            Vector3 refPoint = Application.isPlaying
-                ? transform.TransformPoint(pointLocalOffset)
-                : transform.TransformPoint(pointLocalOffset);
-
+            Vector3 refPoint = transform.TransformPoint(pointLocalOffset);
             Gizmos.color = gizmoPoint;
             Gizmos.DrawSphere(refPoint, 0.15f);
-
-            // Vorschau-Vektor, falls Player vorhanden
             if (Application.isPlaying && currentPlayer != null)
-            {
-                Vector3 v = currentPlayer.position - refPoint;
-                if (onlyHorizontal) v.y = 0f;
-                if (moveTowardRef) v = -v;
-
-                Gizmos.color = gizmoVector;
-                Gizmos.DrawLine(refPoint, refPoint + v.normalized);
-            }
+                DrawVector(refPoint, currentPlayer.position, onlyHorizontal, moveTowardReference, gizmoVector);
         }
-        else // Line
+        else
         {
-            // Linie in Weltcoords
             Vector3 a = transform.TransformPoint(lineLocalStart);
             Vector3 b = transform.TransformPoint(lineLocalEnd);
-
             Gizmos.color = gizmoLine;
             Gizmos.DrawLine(a, b);
             Gizmos.DrawSphere(a, 0.08f);
             Gizmos.DrawSphere(b, 0.08f);
-
-            // Nächster Punkt zu Player (falls vorhanden)
+            Vector3 closest = (Application.isPlaying && currentPlayer != null)
+                ? ClosestPointOnSegment(a, b, currentPlayer.position)
+                : (a + b) * 0.5f;
+            Gizmos.color = gizmoPoint;
+            Gizmos.DrawSphere(closest, 0.12f);
             if (Application.isPlaying && currentPlayer != null)
-            {
-                Vector3 closest = ClosestPointOnSegment(a, b, currentPlayer.position);
-
-                Gizmos.color = gizmoPoint;
-                Gizmos.DrawSphere(closest, 0.12f);
-
-                Vector3 v = currentPlayer.position - closest;
-                if (onlyHorizontal) v.y = 0f;
-                if (moveTowardRef) v = -v;
-
-                Gizmos.color = gizmoVector;
-                Gizmos.DrawLine(closest, closest + v.normalized);
-            }
-            else
-            {
-                // Linienmittelpunkt markieren, wenn kein Player vorhanden
-                Vector3 mid = 0.5f * (a + b);
-                Gizmos.color = gizmoPoint;
-                Gizmos.DrawSphere(mid, 0.12f);
-            }
+                DrawVector(closest, currentPlayer.position, onlyHorizontal, moveTowardReference, gizmoVector);
         }
+    }
+
+    void DrawVector(Vector3 refPos, Vector3 playerPos, bool horizontalOnly, bool towardRef, Color color)
+    {
+        Vector3 v = playerPos - refPos;
+        if (horizontalOnly) v.y = 0f;
+        if (towardRef) v = -v;
+        if (v.sqrMagnitude < 1e-8f) return;
+        Vector3 end = refPos + v.normalized;
+        Gizmos.color = color;
+        Gizmos.DrawLine(refPos, end);
+        Vector3 dir = (end - refPos).normalized;
+        Vector3 right = Quaternion.LookRotation(dir) * Quaternion.Euler(0, 180 + 20, 0) * Vector3.forward;
+        Vector3 left = Quaternion.LookRotation(dir) * Quaternion.Euler(0, 180 - 20, 0) * Vector3.forward;
+        Gizmos.DrawLine(end, end + right * 0.2f);
+        Gizmos.DrawLine(end, end + left * 0.2f);
     }
 }
