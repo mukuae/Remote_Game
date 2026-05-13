@@ -2869,7 +2869,7 @@ GameObject:
   - component: {fileID: 382786851583801502}
   - component: {fileID: 1384224698793985707}
   - component: {fileID: 6086444869520484478}
-  - component: {fileID: 6086444869520484477}
+  - component: {fileID: 6086444869520484479}
   m_Layer: 6
   m_Name: MAIN.001
   m_TagString: Untagged
@@ -2877,34 +2877,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &6086444869520484477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6086444869520484476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66df8954e832f2f45be8650429ff1902, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExtendedTrigger
-  triggerSizeXZ: {x: 3.29, y: 24.09}
-  triggerHeightY: 3.51
-  triggerOffset: {x: -73.8, y: 10.84, z: -0.1}
-  referenceMode: 0
-  pointLocalOffset: {x: 0, y: 0, z: 0}
-  lineLocalStart: {x: -0.5, y: 0, z: 0}
-  lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 10
-  onlyHorizontal: 1
-  moveTowardReference: 0
-  showGizmo: 1
-  gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
-  gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
-  gizmoPoint: {r: 1, g: 0, b: 0, a: 1}
-  gizmoLine: {r: 1, g: 0.5, b: 0, a: 1}
-  gizmoVector: {r: 0, g: 1, b: 1, a: 1}
 --- !u!65 &6086444869520484478
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2924,8 +2896,36 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.29, y: 3.51, z: 24.09}
-  m_Center: {x: -147.6, y: -0.0000019073486, z: 21.479998}
+  m_Size: {x: 2, y: 3, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6086444869520484479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6086444869520484476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66df8954e832f2f45be8650429ff1902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtendedTrigger
+  triggerSizeXZ: {x: 2, y: 2}
+  triggerHeightY: 3
+  triggerOffset: {x: 0, y: 0, z: 0}
+  referenceMode: 0
+  pointLocalOffset: {x: 0, y: 0, z: 0}
+  lineLocalStart: {x: -0.5, y: 0, z: 0}
+  lineLocalEnd: {x: 0.5, y: 0, z: 0}
+  pushImpulse: 10
+  onlyHorizontal: 1
+  moveTowardReference: 0
+  showGizmo: 1
+  gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
+  gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
+  gizmoPoint: {r: 1, g: 0, b: 0, a: 1}
+  gizmoLine: {r: 1, g: 0.5, b: 0, a: 1}
+  gizmoVector: {r: 0, g: 1, b: 1, a: 1}
 --- !u!23 &6104012434479310637
 MeshRenderer:
   m_ObjectHideFlags: 0
