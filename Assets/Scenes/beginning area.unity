@@ -286,7 +286,7 @@ MonoBehaviour:
   passIndex: 0
   min: 26
   minFalloff: 0.001
-  max: 2000
+  max: 200
   maxFalloff: 1
 --- !u!1 &1095574393
 GameObject:
@@ -521,6 +521,9 @@ MonoBehaviour:
   colorMapResolution: 1024
   layerSettings:
   - enabled: 1
+    layer: {fileID: 0}
+    modifierStack: []
+  - enabled: 1
     layer: {fileID: 8574412962073106934, guid: c52ad77efecd38146bfb167ad0f38daf, type: 2}
     modifierStack:
     - {fileID: 1074220755}
@@ -529,10 +532,10 @@ MonoBehaviour:
     modifierStack:
     - {fileID: 1080950531}
   - enabled: 1
-    layer: {fileID: 8574412962073106934, guid: 920f5a6031c46704694c7d9dc264adb5, type: 2}
+    layer: {fileID: 8574412962073106934, guid: 0bdf9c5712d93e54a85a9683feba9947, type: 2}
     modifierStack: []
   - enabled: 1
-    layer: {fileID: 8574412962073106934, guid: b026c6c91b1266347b6eb349b9d59574, type: 2}
+    layer: {fileID: 8574412962073106934, guid: 70f09ddcae256cd4b8a650f8647d2afe, type: 2}
     modifierStack:
     - {fileID: 1380455081}
   autoRepaint: 0
