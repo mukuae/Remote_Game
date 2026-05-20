@@ -19,8 +19,9 @@ public class SpielerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private bool isGrounded;
+    private Vector3 moveDirection;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
@@ -37,7 +38,10 @@ public class SpielerMovement : MonoBehaviour
     void Update()
     {
         // Ground Check
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        if (groundCheck != null)
+        {
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        }
 
         // Check ob Position mit Ziel-Koordinaten übereinstimmt
         float distance = Vector3.Distance(transform.position, targetPosition);
@@ -46,16 +50,23 @@ public class SpielerMovement : MonoBehaviour
             Debug.Log("*** MATCH! Ziel-Position erreicht! ***");
         }
 
-        // Bewegung (WASD)
+        // Bewegung Input sammeln
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        Vector3 move = (transform.right * horizontal + transform.forward * vertical) * moveSpeed;
-        rb.MovePosition(rb.position + move * Time.deltaTime);
+        moveDirection = transform.right * horizontal + transform.forward * vertical;
 
         // Springen: NUR wenn auf Boden UND Cube fällt nicht
         if (Input.GetButtonDown("Jump") && isGrounded && rb.linearVelocity.y <= 0.1f)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+    }
+
+    void FixedUpdate() // BEWEGUNG IN FIXEDUPDATE!
+    {
+        // Bewegung mit velocity statt MovePosition
+        Vector3 velocity = moveDirection.normalized * moveSpeed;
+        velocity.y = rb.linearVelocity.y; // Y-Velocity beibehalten (Gravität!)
+        rb.linearVelocity = velocity;
     }
 }
