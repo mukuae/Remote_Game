@@ -300,9 +300,9 @@ GameObject:
   - component: {fileID: 333496435}
   - component: {fileID: 333496434}
   - component: {fileID: 333496433}
+  - component: {fileID: 333496436}
   - component: {fileID: 333496432}
   - component: {fileID: 333496431}
-  - component: {fileID: 333496436}
   m_Layer: 3
   m_Name: player
   m_TagString: Player
@@ -341,7 +341,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -418,7 +418,7 @@ Transform:
   m_GameObject: {fileID: 333496430}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.936, y: 0.618, z: 4.63}
+  m_LocalPosition: {x: -2.42, y: 1.59, z: 4.19}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3690,8 +3690,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8851051272857841004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7887694650668997198
-BoxCollider:
+--- !u!64 &7887694650668997198
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3708,9 +3708,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 180, y: 39.999996, z: 14.199998}
-  m_Center: {x: -168, y: 11.999998, z: 13.899998}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4110449553308353047, guid: d820b9fec9d001a4b9df9803d4311e39, type: 3}
 --- !u!4 &7979566457107812850
 Transform:
   m_ObjectHideFlags: 0
