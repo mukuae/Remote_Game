@@ -251,7 +251,7 @@ Transform:
   m_GameObject: {fileID: 265461950}
   serializedVersion: 2
   m_LocalRotation: {x: 0.011467051, y: 0.9628797, z: -0.26648462, w: 0.04143949}
-  m_LocalPosition: {x: -1.02, y: 4.35, z: 9.94}
+  m_LocalPosition: {x: -2.1068892, y: 4.3406115, z: 9.9623575}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -635,26 +635,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineSplineDolly
   m_SplineSettings:
     Spline: {fileID: 637459006}
-    Position: 0
+    Position: 0.012409226
     Units: 1
   SplineOffset: {x: 0, y: 0, z: 0}
   CameraRotation: 0
   Damping:
-    Enabled: 0
+    Enabled: 1
     Position: {x: 0, y: 0, z: 0}
-    Angular: 0
+    Angular: 2.1
   AutomaticDolly:
-    Enabled: 0
+    Enabled: 1
     Method:
-      rid: -2
+      rid: 5571524949785968718
   m_LegacyPosition: -1
   m_LegacyUnits: 0
   m_LegacySpline: {fileID: 0}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 5571524949785968718
+      type: {class: SplineAutoDolly/NearestPointToTarget, ns: Unity.Cinemachine, asm: Unity.Cinemachine}
+      data:
+        PositionOffset: 0
+        SearchResolution: 4
+        SearchIteration: 2
 --- !u!114 &1508692449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -707,7 +711,7 @@ Transform:
   m_GameObject: {fileID: 1508692447}
   serializedVersion: 2
   m_LocalRotation: {x: 0.011467051, y: 0.9628797, z: -0.26648462, w: 0.04143949}
-  m_LocalPosition: {x: -1.02, y: 4.35, z: 9.94}
+  m_LocalPosition: {x: -2.1068892, y: 4.3406115, z: 9.9623575}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
