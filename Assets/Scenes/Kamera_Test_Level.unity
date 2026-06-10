@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86128e768f1ddd746ae792b950d5be99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpielerMovement
-  moveSpeed: 5
+  moveSpeed: 3.5555556
   jumpForce: 5
   groundCheck: {fileID: 0}
   groundDistance: 0.4
@@ -3117,6 +3117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66df8954e832f2f45be8650429ff1902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtendedTrigger
+  triggerAnchor: {fileID: 0}
   triggerSizeXZ: {x: 2, y: 2}
   triggerHeightY: 3
   triggerOffset: {x: 0, y: 0, z: 0}
