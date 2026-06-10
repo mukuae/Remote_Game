@@ -9,17 +9,28 @@ public class ExtendedTrigger : MonoBehaviour
         Line
     }
 
+    [Header("Anchor")]
+    [Tooltip("Optional. Wenn gesetzt, wird der Trigger relativ zu diesem Anchor positioniert. Wenn leer, wird transform dieses Objekts benutzt.")]
+    public Transform triggerAnchor;
+
     [Header("Trigger Volume")]
     public Vector2 triggerSizeXZ = new Vector2(2f, 2f);
     public float triggerHeightY = 3f;
 
-    [Tooltip("x = lokale Rechts-Achse, y = Welt-Y-Achse, z = lokale Vorwärts-Achse")]
+    [Tooltip("x = lokale Rechts-Achse des Anchors, y = Welt-Y-Achse, z = lokale Vorwärts-Achse des Anchors")]
     public Vector3 triggerOffset = Vector3.zero;
 
     [Header("Reference")]
+    [Tooltip("Der Referenzpunkt startet jetzt immer von der Mitte des grünen Triggers.")]
     public ReferenceMode referenceMode = ReferenceMode.Point;
+
+    [Tooltip("Offset relativ zur Mitte des grünen Triggers. 0,0,0 = Mitte des Triggers.")]
     public Vector3 pointLocalOffset = Vector3.zero;
+
+    [Tooltip("Linienstart relativ zur Mitte des grünen Triggers.")]
     public Vector3 lineLocalStart = new Vector3(-0.5f, 0f, 0f);
+
+    [Tooltip("Linienende relativ zur Mitte des grünen Triggers.")]
     public Vector3 lineLocalEnd = new Vector3(0.5f, 0f, 0f);
 
     [Header("Impulse")]
@@ -56,6 +67,11 @@ public class ExtendedTrigger : MonoBehaviour
         EnsureTriggerColliderSetup();
     }
 
+    private Transform GetTriggerAnchor()
+    {
+        return triggerAnchor != null ? triggerAnchor : transform;
+    }
+
     private void EnsureTriggerColliderSetup()
     {
         triggerCollider = GetComponent<BoxCollider>();
@@ -82,17 +98,33 @@ public class ExtendedTrigger : MonoBehaviour
 
     private Vector3 GetTriggerCenterWorld()
     {
-        Vector3 worldOffset =
-            transform.right * triggerOffset.x +
-            Vector3.up * triggerOffset.y +
-            transform.forward * triggerOffset.z;
+        Transform anchor = GetTriggerAnchor();
 
-        return transform.position + worldOffset;
+        Vector3 worldOffset =
+            anchor.right * triggerOffset.x +
+            Vector3.up * triggerOffset.y +
+            anchor.forward * triggerOffset.z;
+
+        return anchor.position + worldOffset;
     }
 
     private Vector3 GetTriggerCenterLocal()
     {
         return transform.InverseTransformPoint(GetTriggerCenterWorld());
+    }
+
+    private Vector3 TriggerLocalOffsetToWorld(Vector3 localOffset)
+    {
+        Transform anchor = GetTriggerAnchor();
+
+        Vector3 triggerCenter = GetTriggerCenterWorld();
+
+        Vector3 worldOffset =
+            anchor.right * localOffset.x +
+            Vector3.up * localOffset.y +
+            anchor.forward * localOffset.z;
+
+        return triggerCenter + worldOffset;
     }
 
     private void Update()
@@ -135,11 +167,11 @@ public class ExtendedTrigger : MonoBehaviour
     {
         if (referenceMode == ReferenceMode.Point)
         {
-            return transform.TransformPoint(pointLocalOffset);
+            return TriggerLocalOffsetToWorld(pointLocalOffset);
         }
 
-        Vector3 a = transform.TransformPoint(lineLocalStart);
-        Vector3 b = transform.TransformPoint(lineLocalEnd);
+        Vector3 a = TriggerLocalOffsetToWorld(lineLocalStart);
+        Vector3 b = TriggerLocalOffsetToWorld(lineLocalEnd);
 
         return ClosestPointOnSegment(a, b, playerWorldPos);
     }
@@ -268,7 +300,7 @@ public class ExtendedTrigger : MonoBehaviour
     {
         if (referenceMode == ReferenceMode.Point)
         {
-            Vector3 refPoint = transform.TransformPoint(pointLocalOffset);
+            Vector3 refPoint = TriggerLocalOffsetToWorld(pointLocalOffset);
 
             Gizmos.color = gizmoPoint;
             Gizmos.DrawSphere(refPoint, 0.15f);
@@ -280,8 +312,8 @@ public class ExtendedTrigger : MonoBehaviour
         }
         else
         {
-            Vector3 a = transform.TransformPoint(lineLocalStart);
-            Vector3 b = transform.TransformPoint(lineLocalEnd);
+            Vector3 a = TriggerLocalOffsetToWorld(lineLocalStart);
+            Vector3 b = TriggerLocalOffsetToWorld(lineLocalEnd);
 
             Gizmos.color = gizmoLine;
             Gizmos.DrawLine(a, b);
