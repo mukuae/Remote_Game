@@ -251,7 +251,7 @@ Transform:
   m_GameObject: {fileID: 265461950}
   serializedVersion: 2
   m_LocalRotation: {x: 0.011467051, y: 0.9628797, z: -0.26648462, w: 0.04143949}
-  m_LocalPosition: {x: -2.1068892, y: 4.3406115, z: 9.9623575}
+  m_LocalPosition: {x: 44.13135, y: 3.61, z: 24.129131}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -418,7 +418,7 @@ Transform:
   m_GameObject: {fileID: 333496430}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.42, y: 1.59, z: 4.19}
+  m_LocalPosition: {x: 44.73, y: 0.7, z: 18.75}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -451,6 +451,38 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!1 &443887146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 443887147}
+  m_Layer: 0
+  m_Name: CameraSplines
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &443887147
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443887146}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -17.64099, y: -0, z: -12.87304}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 637459007}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &637459005
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,12 +628,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 637459005}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.24765682, y: -0.00000008999794, z: 8.38783}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 63.04, y: -0.74, z: 35.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 443887147}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1508692447
 GameObject:
@@ -635,13 +667,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineSplineDolly
   m_SplineSettings:
     Spline: {fileID: 637459006}
-    Position: 0.012409226
+    Position: 0
     Units: 1
   SplineOffset: {x: 0, y: 0, z: 0}
   CameraRotation: 0
   Damping:
     Enabled: 1
-    Position: {x: 0, y: 0, z: 0}
+    Position: {x: 0.5, y: 0, z: 0}
     Angular: 2.1
   AutomaticDolly:
     Enabled: 1
@@ -711,7 +743,7 @@ Transform:
   m_GameObject: {fileID: 1508692447}
   serializedVersion: 2
   m_LocalRotation: {x: 0.011467051, y: 0.9628797, z: -0.26648462, w: 0.04143949}
-  m_LocalPosition: {x: -2.1068892, y: 4.3406115, z: 9.9623575}
+  m_LocalPosition: {x: 44.13135, y: 3.61, z: 24.129131}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1083,6 +1115,7 @@ GameObject:
   - component: {fileID: 7861287603357756563}
   - component: {fileID: 1710966796250942067}
   - component: {fileID: 6589833351500523451}
+  - component: {fileID: 7861287603357756564}
   m_Layer: 0
   m_Name: MAIN
   m_TagString: Untagged
@@ -3694,6 +3727,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8843696575868312498}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7861287603357756564
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590092166495249984}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 180.09, y: 40.199993, z: 0.2}
+  m_Center: {x: 1.1085129, y: 0.06535434, z: -0.1}
 --- !u!4 &7985799650089461548
 Transform:
   m_ObjectHideFlags: 0
@@ -4353,8 +4407,8 @@ MeshRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 637459007}
   - {fileID: 333496435}
   - {fileID: 265461954}
   - {fileID: 1508692450}
   - {fileID: 8843696575868312498}
+  - {fileID: 443887147}
