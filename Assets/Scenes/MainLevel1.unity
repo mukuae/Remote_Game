@@ -695,9 +695,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2965792003680166651, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
       insertIndex: -1
       addedObject: {fileID: 872850632}
+    - targetCorrespondingSourceObject: {fileID: 2965792003680166651, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 872850635}
     - targetCorrespondingSourceObject: {fileID: 665106862326068372, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
       insertIndex: -1
       addedObject: {fileID: 872850631}
+    - targetCorrespondingSourceObject: {fileID: 665106862326068372, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 872850634}
     - targetCorrespondingSourceObject: {fileID: 7397924679604506474, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
       insertIndex: -1
       addedObject: {fileID: 872850630}
@@ -1064,11 +1070,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.04, y: 0.03999999, z: 0}
+  m_Size: {x: 0.041, y: 0.041, z: 0.21}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &872850632
 BoxCollider:
@@ -1085,11 +1091,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.04, y: 0.03999999, z: 0}
+  m_Size: {x: 0.041, y: 0.041, z: 0.21}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!64 &872850633
 MeshCollider:
@@ -1113,6 +1119,64 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4110449553308353047, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
+--- !u!114 &872850634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872850626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66df8954e832f2f45be8650429ff1902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtendedTrigger
+  triggerAnchor: {fileID: 0}
+  triggerSizeXZ: {x: 0.041, y: 0.21}
+  triggerHeightY: 0.041
+  triggerOffset: {x: 0, y: 0, z: 0}
+  referenceMode: 0
+  pointLocalOffset: {x: 0, y: 0, z: 0}
+  lineLocalStart: {x: 0, y: 0, z: 0}
+  lineLocalEnd: {x: 0.5, y: 0, z: 0}
+  pushImpulse: 10
+  onlyHorizontal: 1
+  moveTowardReference: 0
+  showGizmo: 1
+  gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
+  gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
+  gizmoPoint: {r: 1, g: 0, b: 0, a: 1}
+  gizmoLine: {r: 1, g: 0.5, b: 0, a: 1}
+  gizmoVector: {r: 0, g: 1, b: 1, a: 1}
+--- !u!114 &872850635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872850627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66df8954e832f2f45be8650429ff1902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtendedTrigger
+  triggerAnchor: {fileID: 0}
+  triggerSizeXZ: {x: 0.041, y: 0.21}
+  triggerHeightY: 0.041
+  triggerOffset: {x: 0, y: 0, z: 0}
+  referenceMode: 0
+  pointLocalOffset: {x: 0, y: 0, z: 0}
+  lineLocalStart: {x: -0.5, y: 0, z: 0}
+  lineLocalEnd: {x: 1.2, y: 0, z: 0}
+  pushImpulse: 10
+  onlyHorizontal: 1
+  moveTowardReference: 0
+  showGizmo: 1
+  gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
+  gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
+  gizmoPoint: {r: 1, g: 0, b: 0, a: 1}
+  gizmoLine: {r: 1, g: 0.5, b: 0, a: 1}
+  gizmoVector: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1 &937726626
 GameObject:
   m_ObjectHideFlags: 0
