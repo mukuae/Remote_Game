@@ -13,9 +13,16 @@ public class PauseMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) {
          if (GameIsPaused) {
             Resume();
+            Debug.Log("ESC pressed");
+            Debug.Log("Paused: "+ GameIsPaused);
+            
+
          }
          else {
             Pause();
+            Debug.Log("ESC pressed");
+            Debug.Log("Paused: "+ GameIsPaused);
+            
          }
     }
     }
@@ -24,8 +31,10 @@ public class PauseMenu : MonoBehaviour
     pauseMenuUI.SetActive(false);
     Time.timeScale = 1f;
     GameIsPaused = false;
+    Debug.Log("Resume");
+    Debug.Log(System.Environment.StackTrace); 
 }
-    void Pause()
+    public void Pause()
 {
     pauseMenuUI.SetActive(true);
     Time.timeScale = 0f;
@@ -43,3 +52,4 @@ public class PauseMenu : MonoBehaviour
     }
 
 }
+
