@@ -28,12 +28,14 @@ public class PauseMenu : MonoBehaviour
     }
     public void Resume ()
 {
+    Debug.Log(System.Environment.StackTrace); 
+ 
     pauseMenuUI.SetActive(false);
     Time.timeScale = 1f;
     GameIsPaused = false;
     Debug.Log("Resume");
-    Debug.Log(System.Environment.StackTrace); 
 }
+    
     public void Pause()
 {
     pauseMenuUI.SetActive(true);
