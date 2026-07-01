@@ -29,6 +29,7 @@ public class PauseMenu : MonoBehaviour
     public void Resume ()
 {
     Debug.Log(System.Environment.StackTrace); 
+    
  
     pauseMenuUI.SetActive(false);
     Time.timeScale = 1f;
