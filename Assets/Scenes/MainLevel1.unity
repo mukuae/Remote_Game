@@ -3594,7 +3594,7 @@ MonoBehaviour:
   moveTowardReference: 0
   useVelocityChange: 1
   clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
+  maxLaunchSpeed: 2
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -3621,7 +3621,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 8.13, y: 5.25, z: 7.89}
-  m_Center: {x: -0.20000458, y: 0, z: -0.55000305}
+  m_Center: {x: -0.20000458, y: 0, z: -0.55000067}
 --- !u!64 &1337098821
 MeshCollider:
   m_ObjectHideFlags: 0
