@@ -1,92 +1,99 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Splines;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float jumpForce = 7f;
-    public float mouseSensitivity = 200f;
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private CharacterController characterController;
+    [SerializeField] private Animator animator;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float RotationSpeed;
+    [SerializeField] private InputActionReference moveAction;
 
-    private Rigidbody rb;
-    private bool isGrounded;
 
-    public Transform cameraTransform;
-    public Vector3 cameraOffset = new Vector3(0, 3, -6);
+    private Vector2 moveInput;
+    private Quaternion targetRotation;
+    private bool isMoving;
 
-    float xRotation = 0f;
-
-    void Start()
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        if (characterController == null)
+        {
+            characterController = GetComponent<CharacterController>();
+        }
+    }
 
+    private void OnEnable()
+    {
+        moveAction.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+        moveAction.action.Disable();
+    }
+
+    private void Update()
+    {
+        HandleInput();
+        Move();
+        Animate();
+        Rotate();
+    }
+
+    private void HandleInput()
+    {
+        moveInput = moveAction.action.ReadValue<Vector2>().normalized;
+        isMoving = moveInput.magnitude > 0.1f;
+    }
+
+    private void Move()
+    {
         if (cameraTransform == null)
         {
             cameraTransform = Camera.main.transform;
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-    }
+        Vector3 cameraForward = cameraTransform.forward;
+        Vector3 cameraRight = cameraTransform.right;
 
-    void Update()
-    {
-        Move();
-        Jump();
-        MouseLook();
-        FollowCamera();
-    }
+        cameraForward.y = 0;
+        cameraRight.y = 0;
 
-    void Move()
-    {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
+        cameraForward.Normalize();
+        cameraRight.Normalize();
 
-        Vector3 move = transform.right * moveX + transform.forward * moveZ;
+        Vector3 moveDirection = cameraForward * moveInput.y + cameraRight * moveInput.x;
 
-        // Achtung: in "normalem" Rigidbody heißt es rb.velocity, nicht rb.linearVelocity
-        rb.linearVelocity = new Vector3(move.x * moveSpeed, rb.linearVelocity.y, move.z * moveSpeed);
-    }
-
-    void Jump()
-    {
-        // Springen nur erlauben, wenn man auf dem Boden ist
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (moveDirection.magnitude > 0.1f)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false; // Direkt nach dem Sprung auf "in der Luft" setzen
+            targetRotation = Quaternion.LookRotation(moveDirection);
         }
-    }
 
-    void MouseLook()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        Vector3 velocity = moveDirection.normalized * speed;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
-
-        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        transform.Rotate(Vector3.up * mouseX);
-    }
-
-    void FollowCamera()
-    {
-        cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        // Wenn wir den Boden berühren, sind wir wieder "grounded"
-        if (collision.gameObject.CompareTag("Ground"))
+        if (!characterController.isGrounded)
         {
-            isGrounded = true;
+            velocity.y = Physics.gravity.y;
         }
-    }
 
-    void OnCollisionExit(Collision collision)
+        characterController.Move(velocity * Time.deltaTime);
+    }
+    private void Animate()
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        animator.SetBool("IsMoving", isMoving);
+    }
+    private void Rotate()
+    {
+        if (isMoving)
         {
-            isGrounded = false;
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                RotationSpeed * Time.deltaTime
+                );
         }
     }
 }
