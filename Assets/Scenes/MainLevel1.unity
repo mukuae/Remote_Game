@@ -3594,7 +3594,7 @@ MonoBehaviour:
   moveTowardReference: 0
   useVelocityChange: 1
   clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
+  maxLaunchSpeed: 2
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
