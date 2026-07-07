@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Splines;
-using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,13 +7,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Animator animator;
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float RotationSpeed;
+    [SerializeField] private float RotationSpeed = 10f;
+    [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference jumpAction;
 
+    public float gravityMultiplier = 3f;
 
     private Vector2 moveInput;
     private Quaternion targetRotation;
     private bool isMoving;
+    private Vector3 velocity;
 
     private void Awake()
     {
@@ -23,16 +25,31 @@ public class PlayerController : MonoBehaviour
         {
             characterController = GetComponent<CharacterController>();
         }
+
+        if (cameraTransform == null)
+        {
+            cameraTransform = Camera.main.transform;
+        }
     }
 
     private void OnEnable()
     {
         moveAction.action.Enable();
+
+        if (jumpAction != null)
+        {
+            jumpAction.action.Enable();
+        }
     }
 
     private void OnDisable()
     {
         moveAction.action.Disable();
+
+        if (jumpAction != null)
+        {
+            jumpAction.action.Disable();
+        }
     }
 
     private void Update()
@@ -51,11 +68,6 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        if (cameraTransform == null)
-        {
-            cameraTransform = Camera.main.transform;
-        }
-
         Vector3 cameraForward = cameraTransform.forward;
         Vector3 cameraRight = cameraTransform.right;
 
@@ -72,19 +84,28 @@ public class PlayerController : MonoBehaviour
             targetRotation = Quaternion.LookRotation(moveDirection);
         }
 
-        Vector3 velocity = moveDirection.normalized * speed;
-
-        if (!characterController.isGrounded)
+        if (characterController.isGrounded && velocity.y < 0)
         {
-            velocity.y = Physics.gravity.y;
+            velocity.y = -2f;
         }
+
+        if (characterController.isGrounded && jumpAction != null && jumpAction.action.WasPressedThisFrame())
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
+        }
+
+        velocity.x = moveDirection.normalized.x * speed;
+        velocity.z = moveDirection.normalized.z * speed;
+        velocity.y += Physics.gravity.y * gravityMultiplier * Time.deltaTime;
 
         characterController.Move(velocity * Time.deltaTime);
     }
+
     private void Animate()
     {
         animator.SetBool("IsMoving", isMoving);
     }
+
     private void Rotate()
     {
         if (isMoving)
@@ -93,7 +114,7 @@ public class PlayerController : MonoBehaviour
                 transform.rotation,
                 targetRotation,
                 RotationSpeed * Time.deltaTime
-                );
+            );
         }
     }
 }
