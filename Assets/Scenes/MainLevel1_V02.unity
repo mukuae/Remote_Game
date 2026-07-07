@@ -1936,13 +1936,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 806566385}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.007648526, y: 0.96106863, z: -0.2749066, w: -0.026739113}
-  m_LocalPosition: {x: 21.09042, y: 6.599999, z: 32.593616}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 21.09042, y: 4.999999, z: 35.593616}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!65 &817765097
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2625,13 +2625,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 937726626}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0076485234, y: 0.9610687, z: -0.2749066, w: -0.02673911}
-  m_LocalPosition: {x: 21.09042, y: 6.599999, z: 32.593616}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 21.09042, y: 4.999999, z: 35.593616}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 31.926, y: -177.6, z: 0}
 --- !u!114 &937726630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3833,8 +3833,8 @@ MonoBehaviour:
     m_Knots:
     - Position:
         x: 0
-        y: 6.6
-        z: 0
+        y: 5
+        z: 3
       TangentIn:
         x: 0
         y: 0
@@ -3850,23 +3850,23 @@ MonoBehaviour:
           z: 0.00000022126791
           w: 0.79051715
     - Position:
-        x: -87.54042
-        y: 5.35
-        z: -0.14361572
+        x: -90
+        y: 5
+        z: 3
       TangentIn:
         x: -0
         y: -0
-        z: -8.754947
+        z: -9
       TangentOut:
         x: 0
         y: 0
-        z: 8.754947
+        z: 9
       Rotation:
         value:
-          x: -0.0050439048
-          y: 0.70766854
-          z: -0.0050521684
-          w: -0.7065085
+          x: 0.000000009051067
+          y: -0.70710677
+          z: -0.000000009051067
+          w: 0.70710677
     m_MetaData:
     - Mode: 2
       Tension: 0.5
@@ -4630,10 +4630,10 @@ MonoBehaviour:
   animator: {fileID: 919132148558366430}
   speed: 5
   RotationSpeed: 10
-  jumpHeight: 2
+  jumpHeight: 7
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  gravityMultiplier: 3
+  gravityMultiplier: 4
 --- !u!95 &919132148558366430
 Animator:
   serializedVersion: 7
