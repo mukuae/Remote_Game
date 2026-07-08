@@ -1197,12 +1197,12 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 150
-  onlyHorizontal: 1
+  pushImpulse: 2
+  onlyHorizontal: 0
   moveTowardReference: 0
   useVelocityChange: 1
   clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
+  maxLaunchSpeed: 2
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -3575,8 +3575,8 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 150
-  onlyHorizontal: 1
+  pushImpulse: 2
+  onlyHorizontal: 0
   moveTowardReference: 0
   useVelocityChange: 1
   clearVelocityBeforePush: 1
@@ -4887,7 +4887,7 @@ GameObject:
   - component: {fileID: 3627358309280565518}
   m_Layer: 0
   m_Name: player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5305,7 +5305,7 @@ GameObject:
   - component: {fileID: 5094988296479059067}
   m_Layer: 0
   m_Name: Armature.001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
