@@ -3430,7 +3430,6 @@ GameObject:
   - component: {fileID: 1307527704}
   - component: {fileID: 1307527703}
   - component: {fileID: 1307527702}
-  - component: {fileID: 1307527705}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -3499,19 +3498,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1307527705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1307527701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e4a7098d179f0243b6b0fa8a0a378ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
-  pauseMenuUI: {fileID: 513269162}
 --- !u!65 &1320818851
 BoxCollider:
   m_ObjectHideFlags: 0
