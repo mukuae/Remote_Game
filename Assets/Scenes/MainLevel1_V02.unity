@@ -302,7 +302,7 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 2
+  pushImpulse: 25
   onlyHorizontal: 0
   moveTowardReference: 0
   useVelocityChange: 1
