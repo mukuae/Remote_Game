@@ -58,7 +58,7 @@ public Color gizmoVector = Color.cyan;
 
 private BoxCollider triggerCollider;
 private Transform currentPlayer;
-private Rigidbody currentPlayerRb;
+private PlayerController currentPlayerController; // NEU: statt Rigidbody
 
 private int playerColliderCount = 0;
 
@@ -148,7 +148,7 @@ private void Update()
 
 private void ApplyImpulseToPlayer()
 {
-    if (currentPlayerRb == null) return;
+    if (currentPlayerController == null) return; // NEU: Check auf PlayerController
 
     Vector3 refPos = GetReferencePosition(currentPlayer.position);
     Vector3 direction = currentPlayer.position - refPos;
@@ -159,24 +159,8 @@ private void ApplyImpulseToPlayer()
 
     direction.Normalize();
 
-    // Clear existing velocity so forces don't stack
-    if (clearVelocityBeforePush)
-    {
-        currentPlayerRb.linearVelocity = Vector3.zero;
-    }
-
-    ForceMode mode = useVelocityChange ? ForceMode.VelocityChange : ForceMode.Impulse;
-    currentPlayerRb.AddForce(direction * pushImpulse, mode);
-
-    // Clamp resulting speed to prevent teleport-like launches
-    if (maxLaunchSpeed > 0f)
-    {
-        Vector3 vel = currentPlayerRb.linearVelocity;
-        if (vel.magnitude > maxLaunchSpeed)
-        {
-            currentPlayerRb.linearVelocity = vel.normalized * maxLaunchSpeed;
-        }
-    }
+    // NEU: PogoJump() auf PlayerController aufrufen statt Rigidbody.AddForce()
+    currentPlayerController.PogoJump(direction, pushImpulse);
 }
 
 private Vector3 GetReferencePosition(Vector3 playerWorldPos)
@@ -214,27 +198,21 @@ private void OnTriggerEnter(Collider other)
 
     playerColliderCount++;
 
-    Rigidbody rb = other.attachedRigidbody;
-
-    currentPlayerRb = rb;
-    currentPlayer = rb != null ? rb.transform : other.transform;
+    // NEU: PlayerController statt Rigidbody suchen
+    currentPlayerController = other.GetComponentInParent<PlayerController>();
+    currentPlayer = other.transform;
 }
 
 private void OnTriggerStay(Collider other)
 {
     if (!other.CompareTag("Player")) return;
 
-    Rigidbody rb = other.attachedRigidbody;
-
-    if (currentPlayerRb == null)
-    {
-        currentPlayerRb = rb;
-    }
+    // NEU: PlayerController statt Rigidbody
+    if (currentPlayerController == null)
+        currentPlayerController = other.GetComponentInParent<PlayerController>();
 
     if (currentPlayer == null)
-    {
-        currentPlayer = rb != null ? rb.transform : other.transform;
-    }
+        currentPlayer = other.transform;
 }
 
 private void OnTriggerExit(Collider other)
@@ -246,7 +224,7 @@ private void OnTriggerExit(Collider other)
     if (playerColliderCount == 0)
     {
         currentPlayer = null;
-        currentPlayerRb = null;
+        currentPlayerController = null; // NEU: PlayerController zurücksetzen
     }
 }
 
