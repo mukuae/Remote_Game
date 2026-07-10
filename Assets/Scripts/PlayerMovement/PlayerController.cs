@@ -91,9 +91,9 @@ private void Move()
     }
 
     velocity.x = moveDirection.x * speed;
-    velocity.z = moveDirection.z * speed;
+//    velocity.z = moveDirection.z * speed;
 
-    velocity += externalVelocity;
+        velocity += externalVelocity;
 
     externalVelocity = Vector3.Lerp(
         externalVelocity,
