@@ -5456,8 +5456,8 @@ MonoBehaviour:
   acceleration: 15
   deceleration: 20
   rotationSpeed: 10
-  jumpHeight: 7
-  coyoteTime: 0.2
+  jumpHeight: 2
+  coyoteTime: 0.1
   jumpBufferTime: 0.2
   maxFallSpeed: 20
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
