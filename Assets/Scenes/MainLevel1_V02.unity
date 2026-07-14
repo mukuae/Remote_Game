@@ -5452,9 +5452,9 @@ MonoBehaviour:
   cameraTransform: {fileID: 806566389}
   characterController: {fileID: 919132148558366428}
   animator: {fileID: 919132148558366430}
-  speed: 5
-  acceleration: 15
-  deceleration: 20
+  speed: 5.5
+  acceleration: 50
+  deceleration: 50
   rotationSpeed: 10
   jumpHeight: 2
   coyoteTime: 0.1
