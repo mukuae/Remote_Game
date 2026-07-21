@@ -718,10 +718,10 @@ PrefabInstance:
       addedObject: {fileID: 528967861}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ec2764c9cac71b84b8771395f9ed0139, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 528967865}
+      addedObject: {fileID: 528967866}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ec2764c9cac71b84b8771395f9ed0139, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 528967866}
+      addedObject: {fileID: 528967871}
   m_SourcePrefab: {fileID: 100100000, guid: ec2764c9cac71b84b8771395f9ed0139, type: 3}
 --- !u!1 &528967860 stripped
 GameObject:
@@ -750,7 +750,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!64 &528967865
+--- !u!114 &528967866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528967860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eb552fa20267f24184d610335979d63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pendulum_Movement
+  animator: {fileID: 0}
+  startSpeed: 1
+  scrollSensitivity: 0.3
+  minSpeed: 0.05
+  maxSpeed: 3
+  invertScroll: 0
+--- !u!64 &528967871
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -772,24 +790,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: ec2764c9cac71b84b8771395f9ed0139, type: 3}
---- !u!114 &528967866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 528967860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8eb552fa20267f24184d610335979d63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pendulum_Movement
-  animator: {fileID: 0}
-  startSpeed: 1
-  scrollSensitivity: 0.3
-  minSpeed: 0.05
-  maxSpeed: 3
-  invertScroll: 0
 --- !u!1 &637132571
 GameObject:
   m_ObjectHideFlags: 0
