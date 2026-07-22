@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float acceleration = 15f;
     [SerializeField] private float deceleration = 20f;
     [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private bool twoDimensionalMovement = false;
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight = 2f;
@@ -50,9 +51,12 @@ public class PlayerController : MonoBehaviour
     private Quaternion previousPlatformRotation;
     private Vector3 platformVelocity;
     private float platformContactTimer;
+    private float lockedZPosition;
 
     private void Awake()
     {
+        lockedZPosition = transform.position.z;
+
         if (characterController == null)
             characterController = GetComponent<CharacterController>();
 
@@ -104,6 +108,7 @@ public class PlayerController : MonoBehaviour
         HandleInput();
         HandleMovingPlatform();
         Move();
+        LockTo2DPlane();
         Animate();
         Rotate();
     }
@@ -363,6 +368,26 @@ public class PlayerController : MonoBehaviour
         currentPlatform = null;
         platformVelocity = Vector3.zero;
         platformContactTimer = 0f;
+    }
+
+
+    private void LockTo2DPlane()
+    {
+        if (!twoDimensionalMovement)
+        {
+            lockedZPosition = transform.position.z;
+            return;
+        }
+
+        currentMoveVelocity.z = 0f;
+        velocity.z = 0f;
+        externalVelocity.z = 0f;
+        platformVelocity.z = 0f;
+
+        float zCorrection = lockedZPosition - transform.position.z;
+
+        if (Mathf.Abs(zCorrection) > 0.0001f)
+            characterController.Move(new Vector3(0f, 0f, zCorrection));
     }
 
     private void Animate()
