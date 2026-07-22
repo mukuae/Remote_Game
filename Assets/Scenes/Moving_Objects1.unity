@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 23387488}
   - component: {fileID: 23387494}
   - component: {fileID: 23387493}
-  - component: {fileID: 23387492}
+  - component: {fileID: 23387495}
   m_Layer: 0
   m_Name: Simple_Character
   m_TagString: Player
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 23387487}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83ca15cd0e431de4f985f03091f288a8, type: 3}
   m_Name: 
@@ -224,7 +224,7 @@ Transform:
   m_GameObject: {fileID: 23387487}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 324.4064, y: 47.18633, z: 649.1428}
+  m_LocalPosition: {x: 324.4064, y: 48.17, z: 649.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -232,40 +232,6 @@ Transform:
   - {fileID: 1728496714}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &23387492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 23387487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55d9d1d3c7908ff419107b2a3658354e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerControlerPhysik
-  cameraTransform: {fileID: 0}
-  rb: {fileID: 0}
-  animator: {fileID: 23387488}
-  capsuleCollider: {fileID: 0}
-  speed: 5
-  acceleration: 15
-  deceleration: 20
-  rotationSpeed: 10
-  jumpHeight: 2
-  coyoteTime: 0.2
-  jumpBufferTime: 0.2
-  maxFallSpeed: 20
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  groundCheckRadius: 0.2
-  groundCheckDistance: 0.2
-  platformTag: Platform
-  moveAction: {fileID: 0}
-  jumpAction: {fileID: 0}
-  gravityMultiplier: 3
-  externalVelocityFadeSpeed: 8
 --- !u!136 &23387493
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -316,6 +282,40 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &23387495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23387487}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55d9d1d3c7908ff419107b2a3658354e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerControllerPhysics
+  cameraTransform: {fileID: 0}
+  rb: {fileID: 0}
+  animator: {fileID: 0}
+  capsuleCollider: {fileID: 0}
+  speed: 5
+  acceleration: 15
+  deceleration: 20
+  rotationSpeed: 10
+  jumpHeight: 2
+  coyoteTime: 0.2
+  jumpBufferTime: 0.2
+  maxFallSpeed: 20
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckRadius: 0.3
+  groundCheckDistance: 0.2
+  platformTag: Platform
+  moveAction: {fileID: 0}
+  jumpAction: {fileID: 0}
+  gravityMultiplier: 3
+  externalVelocityFadeSpeed: 8
 --- !u!1 &137208705
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,6 +795,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ec2764c9cac71b84b8771395f9ed0139, type: 3}
       propertyPath: m_Name
       value: quick pendulum
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ec2764c9cac71b84b8771395f9ed0139, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1653,7 +1657,7 @@ Transform:
   m_GameObject: {fileID: 1728496713}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 43.78, y: 11.31, z: 0}
+  m_LocalPosition: {x: 45.41, y: 3.44, z: -2.38}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
