@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Collider))] // <-- added: needed so TimeSlowAbility's mouse raycast can hit this object
 public class Pendulum_Movement : MonoBehaviour
 {
     [Header("References")]
@@ -29,6 +30,9 @@ public class Pendulum_Movement : MonoBehaviour
 
     private float currentSpeed;
 
+    // --- added: tracks whether this platform is currently selected via the F-key cone ---
+    private bool isSelected;
+
     // Keeps minSpeed itself from being set to 0 or below in the Inspector
     void OnValidate()
     {
@@ -43,11 +47,51 @@ public class Pendulum_Movement : MonoBehaviour
 
         currentSpeed = Mathf.Max(startSpeed, minSpeed);
         animator.speed = currentSpeed;
+
+        // --- added: subscribe to the player's TimeSlowAbility selection events.
+        // Done in Start (not Awake/OnEnable) so we're guaranteed TimeSlowAbility.Instance
+        // already exists on the player by the time this runs.
+        if (TimeSlowAbility.Instance != null)
+        {
+            TimeSlowAbility.Instance.OnPlatformSelected += HandleSelected;
+            TimeSlowAbility.Instance.OnPlatformDeselected += HandleDeselected;
+        }
+        else
+        {
+            Debug.LogWarning($"{name}: No TimeSlowAbility found in the scene. " +
+                              "Make sure TimeSlowAbility is on the player and this object is tagged MovingPlatform.");
+        }
+    }
+
+    // --- added: unsubscribe to avoid errors/leaks if this platform is disabled or destroyed ---
+    void OnDisable()
+    {
+        if (TimeSlowAbility.Instance != null)
+        {
+            TimeSlowAbility.Instance.OnPlatformSelected -= HandleSelected;
+            TimeSlowAbility.Instance.OnPlatformDeselected -= HandleDeselected;
+        }
+    }
+
+    // --- added ---
+    private void HandleSelected(GameObject obj)
+    {
+        if (obj == gameObject) isSelected = true;
+    }
+
+    // --- added ---
+    private void HandleDeselected(GameObject obj)
+    {
+        if (obj == gameObject) isSelected = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // --- added: only react to scroll while this pendulum is the selected one ---
+        if (!isSelected)
+            return;
+
         float scroll = Input.mouseScrollDelta.y;
         if (Mathf.Abs(scroll) < 0.01f)
             return;
