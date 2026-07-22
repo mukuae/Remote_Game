@@ -719,8 +719,8 @@ MonoBehaviour:
   CameraRotation: 0
   Damping:
     Enabled: 1
-    Position: {x: 0, y: 0, z: 0}
-    Angular: 2
+    Position: {x: 1.14, y: 0, z: 0}
+    Angular: 0
   AutomaticDolly:
     Enabled: 1
     Method:
