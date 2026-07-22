@@ -178,7 +178,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 0}
   characterController: {fileID: 23387490}
   animator: {fileID: 23387488}
-  speed: 5.5
+  speed: 7
   acceleration: 50
   deceleration: 50
   rotationSpeed: 10
