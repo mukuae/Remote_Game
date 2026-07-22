@@ -186,10 +186,16 @@ MonoBehaviour:
   coyoteTime: 0.1
   jumpBufferTime: 0.2
   maxFallSpeed: 20
+  gravityMultiplier: 4
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  platformCheckDistance: 0.35
+  platformContactGraceTime: 0.1
+  inheritPlatformVelocityOnJump: 0
+  externalVelocityFadeSpeed: 8
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  gravityMultiplier: 4
-  externalVelocityFadeSpeed: 8
 --- !u!143 &23387490
 CharacterController:
   m_ObjectHideFlags: 0
@@ -943,6 +949,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ec2764c9cac71b84b8771395f9ed0139, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ec2764c9cac71b84b8771395f9ed0139, type: 3}
+      propertyPath: m_TagString
+      value: MovingPlatform
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
