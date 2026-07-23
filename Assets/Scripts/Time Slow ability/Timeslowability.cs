@@ -5,30 +5,30 @@ using UnityEngine;
 /// <summary>
 /// Time-Slow targeting cone:
 /// - Press <see cref="activationKey"/> (default F) to toggle a yellow
-///   "vision cone" on/off, drawn on the ground plane in front of the
-///   player, in the direction <see cref="aimSource"/> is facing.
-/// - Every GameObject tagged "MovingPlatform" that is inside that cone
-///   gets an outline highlight (<see cref="inConeOutlineColor"/>).
-/// - If the mouse cursor is anywhere inside the cone (it does NOT need to
-///   be hovering the platform itself), the highlighted platform closest
-///   to the cursor becomes the "Selected" platform
-///   (<see cref="selectedOutlineColor"/>) and is exposed via
-///   <see cref="SelectedObject"/> / <see cref="Instance"/> /
-///   <see cref="OnPlatformSelected"/>.
+///   "vision cone" on/off, drawn from <see cref="aimSource"/>'s position,
+///   pointing along its facing direction.
+/// - Any GameObject tagged "MovingPlatform" that enters the cone is
+///   immediately highlighted AND selected — no mouse cursor involved at
+///   all. It stays selected for as long as it's inside the cone, and
+///   becomes deselected the moment it leaves the cone (or the ability is
+///   turned off).
+/// - More than one platform can be selected at the same time if more than
+///   one is inside the cone.
 ///
 /// This script does NOT change any platform's speed itself — it only
-/// decides which platform is currently selected. Your existing
-/// scroll-wheel speed script should check whether it is the selected
-/// object before reacting to scroll input, e.g.:
+/// decides which platform(s) are currently selected, via
+/// <see cref="OnPlatformSelected"/> / <see cref="OnPlatformDeselected"/>.
+/// Your existing scroll-wheel speed script should check whether IT was the
+/// object passed into OnPlatformSelected before reacting to scroll input
+/// (see Pendulum_Movement.cs for the pattern already wired up).
 ///
-///   void Update()
-///   {
-///       if (TimeSlowAbility.Instance == null ||
-///           TimeSlowAbility.Instance.SelectedObject != gameObject) return;
-///
-///       float scroll = Input.mouseScrollDelta.y;
-///       // ... your existing speed-change code here ...
-///   }
+/// NOTE: this version uses the original flat, horizontal cone (based on
+/// aimSource.forward flattened onto the ground plane) — the "spawns from
+/// the face and tilts with up/down look" experiment has been reverted per
+/// your last message. Since you mentioned this is actually a 2D project,
+/// we'll likely want to revisit how aimSource's direction is set once
+/// you've settled on how facing/up-down look is represented in your
+/// movement script — happy to adjust this whenever you're ready for that.
 /// </summary>
 public class TimeSlowAbility : MonoBehaviour
 {
@@ -40,9 +40,6 @@ public class TimeSlowAbility : MonoBehaviour
 
     [Tooltip("Transform whose forward direction the cone points along. Defaults to this object.")]
     public Transform aimSource;
-
-    [Tooltip("Camera used to raycast the mouse cursor into the world. Defaults to Camera.main.")]
-    public Camera playerCamera;
 
     [Header("Performance")]
     [Tooltip("How often (seconds) we re-scan the scene for objects tagged MovingPlatform. 0 = every frame.")]
@@ -63,12 +60,9 @@ public class TimeSlowAbility : MonoBehaviour
     [Header("Cone Appearance")]
     public Color coneColor = new Color(1f, 0.92f, 0.1f, 0.28f);
 
-    [Header("Highlight Colours")]
-    [Tooltip("Outline colour for a MovingPlatform that is simply inside the cone.")]
-    public Color inConeOutlineColor = new Color(1f, 0.85f, 0.2f, 1f);
-
-    [Tooltip("Outline colour for a MovingPlatform that is inside the cone AND under the mouse cursor (selected).")]
-    public Color selectedOutlineColor = new Color(0.2f, 1f, 1f, 1f);
+    [Header("Highlight Colour")]
+    [Tooltip("Outline colour for a MovingPlatform while it's inside the cone (i.e. selected).")]
+    public Color outlineColor = new Color(0.2f, 1f, 1f, 1f);
 
     [Range(0.001f, 0.1f)]
     public float outlineWidth = 0.02f;
@@ -78,14 +72,13 @@ public class TimeSlowAbility : MonoBehaviour
     public Action<GameObject> OnPlatformDeselected;
 
     public bool IsActive { get; private set; }
-    public GameObject SelectedObject { get; private set; }
 
     private GameObject coneVisual;
     private MeshFilter coneMeshFilter;
     private MeshRenderer coneMeshRenderer;
     private Material coneMaterialInstance;
 
-    private readonly HashSet<GameObject> highlightedObjects = new HashSet<GameObject>();
+    private readonly HashSet<GameObject> selectedObjects = new HashSet<GameObject>();
 
     private GameObject[] cachedPlatforms = new GameObject[0];
     private float rescanTimer;
@@ -99,7 +92,6 @@ public class TimeSlowAbility : MonoBehaviour
         Instance = this;
 
         if (aimSource == null) aimSource = transform;
-        if (playerCamera == null) playerCamera = Camera.main;
 
         BuildConeVisual();
         coneVisual.SetActive(false);
@@ -122,8 +114,7 @@ public class TimeSlowAbility : MonoBehaviour
         RescanPlatformsIfNeeded();
         UpdateConeTransform();
         UpdateConeMesh();
-        DetectAndHighlight();
-        HandleMouseSelection();
+        DetectAndSelect();
     }
 
     public void Toggle()
@@ -137,8 +128,7 @@ public class TimeSlowAbility : MonoBehaviour
         }
         else
         {
-            ClearAllHighlights();
-            SetSelected(null);
+            DeselectAll();
         }
     }
 
@@ -236,7 +226,7 @@ public class TimeSlowAbility : MonoBehaviour
         coneVisual.transform.position = aimSource.position;
         Vector3 flatForward = aimSource.forward;
         flatForward.y = 0f;
-        if (flatForward.sqrMagnitude < 0.0001f) flatForward = aimSource.up; // fallback if looking straight up/down
+        if (flatForward.sqrMagnitude < 0.0001f) flatForward = aimSource.up; // fallback if forward is straight up/down
         coneVisual.transform.rotation = Quaternion.LookRotation(flatForward.normalized, Vector3.up);
     }
 
@@ -250,7 +240,7 @@ public class TimeSlowAbility : MonoBehaviour
         cachedPlatforms = GameObject.FindGameObjectsWithTag("MovingPlatform");
     }
 
-    // ---------- Cone detection + highlight ----------
+    // ---------- Cone detection + selection (being in the cone IS being selected) ----------
 
     private bool IsWithinCone(Vector3 worldPosition)
     {
@@ -267,7 +257,7 @@ public class TimeSlowAbility : MonoBehaviour
         return angle <= coneAngle * 0.5f;
     }
 
-    private void DetectAndHighlight()
+    private void DetectAndSelect()
     {
         HashSet<GameObject> stillInCone = new HashSet<GameObject>();
 
@@ -277,116 +267,51 @@ public class TimeSlowAbility : MonoBehaviour
             if (IsWithinCone(obj.transform.position))
             {
                 stillInCone.Add(obj);
-                if (!highlightedObjects.Contains(obj))
+                if (!selectedObjects.Contains(obj))
                 {
-                    Highlight(obj, inConeOutlineColor);
-                    highlightedObjects.Add(obj);
+                    Select(obj);
                 }
             }
         }
 
-        highlightedObjects.RemoveWhere(obj =>
+        selectedObjects.RemoveWhere(obj =>
         {
             if (obj == null) return true;
             if (!stillInCone.Contains(obj))
             {
-                if (obj != SelectedObject) RemoveHighlight(obj);
+                Deselect(obj);
                 return true;
             }
             return false;
         });
     }
 
-    private void ClearAllHighlights()
+    private void Select(GameObject obj)
     {
-        foreach (var obj in highlightedObjects)
-        {
-            if (obj != null) RemoveHighlight(obj);
-        }
-        highlightedObjects.Clear();
-    }
-
-    private void Highlight(GameObject obj, Color color)
-    {
+        selectedObjects.Add(obj);
         Outline outline = obj.GetComponent<Outline>();
         if (outline == null) outline = obj.AddComponent<Outline>();
-        outline.OutlineColor = color;
+        outline.OutlineColor = outlineColor;
         outline.OutlineWidth = outlineWidth;
         outline.enabled = true;
+
+        OnPlatformSelected?.Invoke(obj);
     }
 
-    private void RemoveHighlight(GameObject obj)
+    private void Deselect(GameObject obj)
     {
         Outline outline = obj.GetComponent<Outline>();
         if (outline != null) outline.enabled = false;
+
+        OnPlatformDeselected?.Invoke(obj);
     }
 
-    // ---------- Mouse selection ----------
-
-    private void HandleMouseSelection()
+    private void DeselectAll()
     {
-        if (playerCamera == null) { SetSelected(null); return; }
-
-        // Where is the cursor pointing, on the same flat ground plane the cone lies on?
-        // This doesn't require hitting any collider, so it works even if the
-        // cursor isn't directly over the platform's mesh.
-        Plane groundPlane = new Plane(Vector3.up, aimSource.position);
-        Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
-
-        if (!groundPlane.Raycast(ray, out float enter))
+        foreach (var obj in selectedObjects)
         {
-            SetSelected(null);
-            return;
+            if (obj != null) Deselect(obj);
         }
-
-        Vector3 cursorWorldPoint = ray.GetPoint(enter);
-
-        if (!IsWithinCone(cursorWorldPoint))
-        {
-            SetSelected(null);
-            return;
-        }
-
-        // Cursor is somewhere inside the cone — select whichever highlighted
-        // platform is closest to that point.
-        GameObject closest = null;
-        float closestDist = float.MaxValue;
-        foreach (var obj in highlightedObjects)
-        {
-            if (obj == null) continue;
-            Vector3 flatObjPos = new Vector3(obj.transform.position.x, 0f, obj.transform.position.z);
-            Vector3 flatCursorPos = new Vector3(cursorWorldPoint.x, 0f, cursorWorldPoint.z);
-            float dist = Vector3.Distance(flatObjPos, flatCursorPos);
-            if (dist < closestDist)
-            {
-                closestDist = dist;
-                closest = obj;
-            }
-        }
-
-        SetSelected(closest);
-    }
-
-    private void SetSelected(GameObject obj)
-    {
-        if (SelectedObject == obj) return;
-
-        if (SelectedObject != null)
-        {
-            if (highlightedObjects.Contains(SelectedObject))
-                Highlight(SelectedObject, inConeOutlineColor);
-            else
-                RemoveHighlight(SelectedObject);
-
-            OnPlatformDeselected?.Invoke(SelectedObject);
-        }
-
-        SelectedObject = obj;
-
-        if (SelectedObject != null)
-        {
-            Highlight(SelectedObject, selectedOutlineColor);
-            OnPlatformSelected?.Invoke(SelectedObject);
-        }
+        selectedObjects.Clear();
     }
 }
