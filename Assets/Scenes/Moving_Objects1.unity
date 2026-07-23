@@ -232,7 +232,7 @@ Transform:
   m_GameObject: {fileID: 23387487}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 324.4064, y: 47.15, z: 649.25}
+  m_LocalPosition: {x: 324.4064, y: 48.17, z: 649.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -620,12 +620,17 @@ Transform:
   m_GameObject: {fileID: 206726349}
   serializedVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_LocalRotation: {x: -0.00092173606, y: 0.9989189, z: -0.040558055, w: -0.022701768}
   m_LocalPosition: {x: 324.81482, y: 48.90124, z: 658.2309}
 =======
   m_LocalRotation: {x: -0.0005423287, y: 0.99535966, z: -0.09605861, w: -0.0056196116}
   m_LocalPosition: {x: 324.50772, y: 48.89822, z: 658.2226}
 >>>>>>> 05823f28026112362a944773827b444fab6b2982
+=======
+  m_LocalRotation: {x: -0.0002281837, y: 0.9991646, z: -0.04047731, w: -0.0056326133}
+  m_LocalPosition: {x: 324.50757, y: 48.89822, z: 658.2226}
+>>>>>>> parent of 05823f2 (added head tilt animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -915,10 +920,14 @@ MonoBehaviour:
   m_SplineSettings:
     Spline: {fileID: 1446545618}
 <<<<<<< HEAD
+<<<<<<< HEAD
     Position: 0.82200444
 =======
     Position: 0.6012395
 >>>>>>> 05823f28026112362a944773827b444fab6b2982
+=======
+    Position: 0.6012436
+>>>>>>> parent of 05823f2 (added head tilt animation)
     Units: 1
   SplineOffset: {x: 0, y: 0, z: 0}
   CameraRotation: 0
@@ -994,12 +1003,17 @@ Transform:
   m_GameObject: {fileID: 499945699}
   serializedVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_LocalRotation: {x: -0.0009217365, y: 0.99891883, z: -0.040558062, w: -0.022701772}
   m_LocalPosition: {x: 324.81482, y: 48.90124, z: 658.2309}
 =======
   m_LocalRotation: {x: -0.00054232863, y: 0.99535966, z: -0.09605861, w: -0.0056196116}
   m_LocalPosition: {x: 324.50772, y: 48.89822, z: 658.2226}
 >>>>>>> 05823f28026112362a944773827b444fab6b2982
+=======
+  m_LocalRotation: {x: -0.00022818329, y: 0.9991646, z: -0.040477317, w: -0.005632615}
+  m_LocalPosition: {x: 324.50757, y: 48.89822, z: 658.2226}
+>>>>>>> parent of 05823f2 (added head tilt animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
