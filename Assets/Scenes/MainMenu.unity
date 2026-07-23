@@ -2344,7 +2344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   musicSource: {fileID: 840188568}
   SFXSource: {fileID: 1234935379}
-  MainMenuTheme: {fileID: 8300000, guid: 308c3e458ff44a448888f26dd189ea2e, type: 3}
+  MainMenuTheme: {fileID: 8300000, guid: 75c825f7bd95f3045aac5e8e1d8018d2, type: 3}
   Click_On: {fileID: 8300000, guid: 1b4e81ff68463234db944b21e856f861, type: 3}
   Click_off: {fileID: 8300000, guid: 6ec7ee4d0d45e1e43938646abd9968e5, type: 3}
 --- !u!4 &1253834004
