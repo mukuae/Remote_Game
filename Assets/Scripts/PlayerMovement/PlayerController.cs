@@ -36,7 +36,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputActionReference jumpAction;
 
     private Vector2 moveInput;
-    private float lookInput;
     private Quaternion targetRotation;
     private bool isMoving;
 
@@ -121,17 +120,7 @@ public class PlayerController : MonoBehaviour
             : Vector2.zero;
 
         moveInput = Vector2.ClampMagnitude(rawMoveInput, 1f);
-
-        if (twoDimensionalMovement)
-        {
-            isMoving = Mathf.Abs(moveInput.x) > 0.1f;
-            lookInput = moveInput.y;
-        }
-        else
-        {
-            isMoving = moveInput.magnitude > 0.1f;
-            lookInput = 0f;
-        }
+        isMoving = moveInput.magnitude > 0.1f;
 
         if (jumpAction != null && jumpAction.action.WasPressedThisFrame())
         {
@@ -265,9 +254,10 @@ public class PlayerController : MonoBehaviour
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        Vector3 moveDirection = twoDimensionalMovement
-            ? (isMoving ? cameraRight * moveInput.x : Vector3.zero)
-            : (isMoving ? cameraForward * moveInput.y + cameraRight * moveInput.x : Vector3.zero);
+        Vector3 moveDirection = isMoving
+            ? cameraForward * moveInput.y +
+              cameraRight * moveInput.x
+            : Vector3.zero;
 
         moveDirection =
             Vector3.ClampMagnitude(moveDirection, 1f);
@@ -406,7 +396,6 @@ public class PlayerController : MonoBehaviour
             return;
 
         animator.SetBool("IsMoving", isMoving);
-        animator.SetFloat("LookInput", lookInput);
     }
 
     private void Rotate()
