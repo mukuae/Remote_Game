@@ -1,169 +1,175 @@
 using UnityEngine;
 
-// Spider-style wall/roof climbing ability.
-// Attach to the same GameObject as your CharacterController and your
-// existing ground-movement script.
-//
-// Press X to toggle the ability on/off. While it's on, walking toward
-// anything on the Climbable layer sticks you to it, and your normal
-// Horizontal/Vertical input crawls you across that surface - up walls,
-// around corners, onto ceilings. Space lets go. Your own movement
-// script is simply disabled while you're stuck to a surface and
-// re-enabled the instant you detach, so it keeps doing everything else
-// exactly as before.
-[RequireComponent(typeof(CharacterController))]
-public class SpiderClimb : MonoBehaviour
+public class SpiderClimbing : MonoBehaviour
 {
-    [Header("Toggle")]
-    public KeyCode toggleKey = KeyCode.X;
-    public KeyCode letGoKey = KeyCode.Space;
+    [Header("Climbing Settings")]
+    public float climbSpeed = 4f;
+    public float rotationSpeed = 10f;
+    public float surfaceDetectionRange = 1.2f;
+    public LayerMask climbableLayers;
 
-    [Header("Scripts to pause while climbing")]
-    [Tooltip("Drag your ground-movement script here (and a separate gravity script too, if you have one). They get disabled while stuck to a surface and re-enabled the moment you let go.")]
-    public MonoBehaviour[] scriptsToDisableWhileClimbing;
+    [Header("Sticky Settings")]
+    public float stickyForce = 20f; // Force pushing player into the surface
 
-    [Header("Surface Detection")]
-    [Tooltip("Put your walls/roofs on their own layer and select ONLY that layer here - otherwise the ability will also try to stick to the ground.")]
-    public LayerMask climbableMask = ~0;
-    public float attachRange = 0.8f;
-    public float stickRange = 1.0f;
-    public float hugDistance = 0.05f;
-    public Vector3 probeOffset = new Vector3(0f, 1f, 0f);
+    private Rigidbody rb;
+    private bool isClimbing = false;
+    private Vector3 surfaceNormal = Vector3.up;
+    private bool wasKinematic;
+    private float originalGravityScale;
 
-    [Header("Climbing Movement")]
-    public float climbSpeed = 3.5f;
-    public float turnSpeed = 540f;
-    public float detachCooldown = 0.25f;
-    public float detachPushback = 0.3f;
+    // Reference to disable your existing movement script while climbing
+    // Drag your movement script type here if needed, or handle via event
+    // public YourMovementScript movementScript; // <-- optional
 
-    public bool AbilityActive { get; private set; }
-    public bool IsClimbing { get; private set; }
-
-    CharacterController cc;
-    Vector3 surfaceNormal = Vector3.up;
-    float cooldownTimer;
-
-    void Awake()
+    void Start()
     {
-        cc = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            Debug.LogError("SpiderClimbing: No Rigidbody found on " + gameObject.name);
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(toggleKey))
+        // Toggle climbing with X
+        if (Input.GetKeyDown(KeyCode.X))
         {
-            AbilityActive = !AbilityActive;
-            if (!AbilityActive && IsClimbing) Detach(false);
+            ToggleClimbing();
         }
 
-        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;
-
-        if (!IsClimbing)
+        if (isClimbing)
         {
-            if (AbilityActive && cooldownTimer <= 0f) TryAttach();
-            return;
+            DetectSurface();
+            HandleClimbInput();
+            AlignToSurface();
         }
-
-        if (Input.GetKeyDown(letGoKey))
-        {
-            Detach(true);
-            return;
-        }
-
-        ClimbMove();
     }
 
-    void TryAttach()
+    void FixedUpdate()
     {
-        Vector3 origin = transform.position + probeOffset;
-        Vector3[] probes =
+        if (isClimbing)
         {
+            // Push player into the surface so they stick
+            rb.AddForce(-surfaceNormal * stickyForce);
+        }
+    }
+
+    void ToggleClimbing()
+    {
+        isClimbing = !isClimbing;
+
+        if (isClimbing)
+        {
+            // Disable gravity while climbing
+            rb.useGravity = false;
+            rb.linearVelocity = Vector3.zero;
+
+            // Optional: disable your movement script here
+            // if (movementScript != null) movementScript.enabled = false;
+
+            Debug.Log("Spider Climbing: ON");
+        }
+        else
+        {
+            // Re-enable gravity when climbing stops
+            rb.useGravity = true;
+            rb.linearVelocity = Vector3.zero;
+
+            // Snap rotation back to upright
+            StartCoroutine(ResetRotation());
+
+            // Optional: re-enable your movement script here
+            // if (movementScript != null) movementScript.enabled = true;
+
+            Debug.Log("Spider Climbing: OFF");
+        }
+    }
+
+    void DetectSurface()
+    {
+        // Cast a ray downward relative to the player's current orientation
+        // to find the surface they are standing/climbing on
+        RaycastHit hit;
+
+        // Try current "down" direction first (relative to player)
+        if (Physics.Raycast(transform.position, -transform.up, out hit, surfaceDetectionRange, climbableLayers))
+        {
+            surfaceNormal = hit.normal;
+            return;
+        }
+
+        // Fallback: try world directions to find any nearby surface
+        Vector3[] directions = {
+            -transform.up,
+            transform.up,
+            transform.right,
+            -transform.right,
             transform.forward,
-            Vector3.up,
-            (transform.forward + Vector3.up).normalized
+            -transform.forward
         };
 
-        foreach (var dir in probes)
+        float closestDist = float.MaxValue;
+        foreach (Vector3 dir in directions)
         {
-            if (Physics.Raycast(origin, dir, out RaycastHit hit, attachRange, climbableMask))
+            if (Physics.Raycast(transform.position, dir, out hit, surfaceDetectionRange, climbableLayers))
             {
-                Attach(hit.normal);
-                return;
+                if (hit.distance < closestDist)
+                {
+                    closestDist = hit.distance;
+                    surfaceNormal = hit.normal;
+                }
             }
         }
     }
 
-    void Attach(Vector3 normal)
+    void HandleClimbInput()
     {
-        IsClimbing = true;
-        surfaceNormal = normal;
-        cc.enabled = false; // drive the transform by hand while climbing so it can rotate freely onto walls/ceilings
-        SetScriptsEnabled(false);
-        SnapRotation(normal, transform.forward);
-    }
+        // Up arrow = move forward along the surface
+        // Down arrow = move backward along the surface
+        float vertical = 0f;
 
-    void Detach(bool pushOff)
-    {
-        IsClimbing = false;
-        if (pushOff) transform.position += surfaceNormal * detachPushback;
-        transform.rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
-        cc.enabled = true;
-        SetScriptsEnabled(true);
-        cooldownTimer = detachCooldown;
-    }
+        if (Input.GetKey(KeyCode.UpArrow))
+            vertical = 1f;
+        else if (Input.GetKey(KeyCode.DownArrow))
+            vertical = -1f;
 
-    void SetScriptsEnabled(bool enable)
-    {
-        foreach (var script in scriptsToDisableWhileClimbing)
-            if (script) script.enabled = enable;
-    }
-
-    void ClimbMove()
-    {
-        Vector3 climbUp = Vector3.ProjectOnPlane(Vector3.up, surfaceNormal).normalized;
-        if (climbUp.sqrMagnitude < 0.001f)
-            climbUp = Vector3.ProjectOnPlane(transform.forward, surfaceNormal).normalized;
-        Vector3 climbRight = Vector3.Cross(surfaceNormal, climbUp).normalized;
-
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
-        Vector3 move = climbRight * h + climbUp * v;
-        if (move.sqrMagnitude > 1f) move.Normalize();
-        transform.position += move * climbSpeed * Time.deltaTime;
-
-        // Re-probe every frame: keeps you hugging the surface and lets you
-        // wrap from a wall onto a ceiling (or around a corner) as you walk into one.
-        Vector3 origin = transform.position + probeOffset;
-        Vector3[] probes = { -surfaceNormal, transform.forward, climbUp, -climbUp };
-        bool stillStuck = false;
-
-        foreach (var dir in probes)
+        if (vertical != 0f)
         {
-            if (Physics.Raycast(origin, dir, out RaycastHit hit, stickRange, climbableMask))
-            {
-                transform.position = hit.point + hit.normal * hugDistance - probeOffset;
-                surfaceNormal = hit.normal;
-                stillStuck = true;
-                break;
-            }
+            // Move along the surface: forward is perpendicular to the surface normal
+            // and aligned with the player's current forward direction projected onto the surface
+            Vector3 moveDir = Vector3.ProjectOnPlane(transform.forward, surfaceNormal).normalized;
+            rb.MovePosition(rb.position + moveDir * climbSpeed * vertical * Time.deltaTime);
         }
-
-        if (!stillStuck)
-        {
-            Detach(false); // walked off the edge of the climbable surface
-            return;
-        }
-
-        SnapRotation(surfaceNormal, climbUp);
     }
 
-    void SnapRotation(Vector3 normal, Vector3 forwardHint)
+    void AlignToSurface()
     {
-        Vector3 forward = Vector3.ProjectOnPlane(forwardHint, normal);
-        if (forward.sqrMagnitude < 0.001f)
-            forward = Vector3.ProjectOnPlane(Vector3.up, normal);
+        // Smoothly rotate the player so their "up" matches the surface normal
+        Quaternion targetRotation = Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation;
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
 
-        Quaternion target = Quaternion.LookRotation(forward.normalized, normal);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, target, turnSpeed * Time.deltaTime);
+    System.Collections.IEnumerator ResetRotation()
+    {
+        // Smoothly rotate back to upright when climbing ends
+        Quaternion startRot = transform.rotation;
+        Quaternion endRot = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * rotationSpeed;
+            transform.rotation = Quaternion.Slerp(startRot, endRot, t);
+            yield return null;
+        }
+    }
+
+    // Visual debug: draw the surface normal in the Scene view
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, surfaceNormal * 1.5f);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, -transform.up * surfaceDetectionRange);
     }
 }
