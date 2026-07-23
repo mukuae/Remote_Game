@@ -9,10 +9,11 @@ using UnityEngine;
 ///   player, in the direction <see cref="aimSource"/> is facing.
 /// - Every GameObject tagged "MovingPlatform" that is inside that cone
 ///   gets an outline highlight (<see cref="inConeOutlineColor"/>).
-/// - If the mouse cursor's world position is ALSO inside the cone, and
-///   it's hovering one of those highlighted platforms, that platform
-///   becomes the "Selected" platform (<see cref="selectedOutlineColor"/>)
-///   and is exposed via <see cref="SelectedObject"/> / <see cref="Instance"/> /
+/// - If the mouse cursor is anywhere inside the cone (it does NOT need to
+///   be hovering the platform itself), the highlighted platform closest
+///   to the cursor becomes the "Selected" platform
+///   (<see cref="selectedOutlineColor"/>) and is exposed via
+///   <see cref="SelectedObject"/> / <see cref="Instance"/> /
 ///   <see cref="OnPlatformSelected"/>.
 ///
 /// This script does NOT change any platform's speed itself — it only
@@ -326,20 +327,44 @@ public class TimeSlowAbility : MonoBehaviour
     {
         if (playerCamera == null) { SetSelected(null); return; }
 
+        // Where is the cursor pointing, on the same flat ground plane the cone lies on?
+        // This doesn't require hitting any collider, so it works even if the
+        // cursor isn't directly over the platform's mesh.
+        Plane groundPlane = new Plane(Vector3.up, aimSource.position);
         Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 500f))
+
+        if (!groundPlane.Raycast(ray, out float enter))
         {
-            GameObject hitObj = hit.collider.gameObject;
-            // hit.point is where the cursor is actually pointing in the world —
-            // that's what has to be inside the cone, not the object's pivot.
-            if (hitObj.CompareTag("MovingPlatform") && IsWithinCone(hit.point))
+            SetSelected(null);
+            return;
+        }
+
+        Vector3 cursorWorldPoint = ray.GetPoint(enter);
+
+        if (!IsWithinCone(cursorWorldPoint))
+        {
+            SetSelected(null);
+            return;
+        }
+
+        // Cursor is somewhere inside the cone — select whichever highlighted
+        // platform is closest to that point.
+        GameObject closest = null;
+        float closestDist = float.MaxValue;
+        foreach (var obj in highlightedObjects)
+        {
+            if (obj == null) continue;
+            Vector3 flatObjPos = new Vector3(obj.transform.position.x, 0f, obj.transform.position.z);
+            Vector3 flatCursorPos = new Vector3(cursorWorldPoint.x, 0f, cursorWorldPoint.z);
+            float dist = Vector3.Distance(flatObjPos, flatCursorPos);
+            if (dist < closestDist)
             {
-                SetSelected(hitObj);
-                return;
+                closestDist = dist;
+                closest = obj;
             }
         }
 
-        SetSelected(null);
+        SetSelected(closest);
     }
 
     private void SetSelected(GameObject obj)
