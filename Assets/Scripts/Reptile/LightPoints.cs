@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
@@ -7,7 +8,8 @@ using UnityEngine.UI;
 ///
 /// Creates a "Light Points" bar on screen that starts at 100%, drains at a
 /// fixed rate, and refills while the player touches any object that has a
-/// <see cref="SunZone"/> component.
+/// <see cref="SunZone"/> component. When it reaches 0 the player dies: a death
+/// message is shown and the player can no longer move.
 ///
 /// Requirements: the player needs a Collider (or Collider2D) and, as usual for
 /// Unity physics events, a Rigidbody (or Rigidbody2D) on either the player or
@@ -23,7 +25,7 @@ public class LightPoints : MonoBehaviour
     [SerializeField] private float drainPerSecond = 5f;
 
     [Tooltip("Percent gained per second while touching a sun zone (capped at 100%).")]
-    [SerializeField] private float regenPerSecond = 25f;
+    [SerializeField] private float regenPerSecond = 20f;
 
     [Header("Bar appearance")]
     [SerializeField] private Vector2 barSize = new Vector2(300f, 28f);
@@ -31,6 +33,21 @@ public class LightPoints : MonoBehaviour
     [SerializeField] private Vector2 barMargin = new Vector2(20f, 20f);
     [SerializeField] private Color backgroundColor = new Color(0f, 0f, 0f, 0.6f);
     [SerializeField] private Color fillColor = new Color(1f, 0.85f, 0.2f, 1f);
+
+    [Header("Death")]
+    [SerializeField] private string deathMessage = "You got too cold and died";
+
+    [Tooltip("On death, disable every other script on this object (movement, input, etc.) so the player can't move.")]
+    [SerializeField] private bool disableOtherScripts = true;
+
+    [Tooltip("Scripts on this object that should keep running after death.")]
+    [SerializeField] private MonoBehaviour[] keepEnabled;
+
+    [Tooltip("On death, zero the Rigidbody/Rigidbody2D velocity and freeze it in place.")]
+    [SerializeField] private bool freezePhysicsOnDeath = true;
+
+    [Tooltip("Invoked once when the player runs out of Light Points.")]
+    public UnityEvent onDeath = new UnityEvent();
 
     public const float Max = 100f;
 
@@ -40,6 +57,9 @@ public class LightPoints : MonoBehaviour
     /// <summary>True while the player is touching at least one active sun zone.</summary>
     public bool IsInSunZone { get; private set; }
 
+    /// <summary>True once the player has run out of Light Points.</summary>
+    public bool IsDead { get; private set; }
+
     // Every sun-zone collider currently touching the player, mapped to its SunZone.
     private readonly Dictionary<Component, SunZone> contacts = new Dictionary<Component, SunZone>();
     private readonly List<Component> destroyed = new List<Component>();
@@ -47,6 +67,7 @@ public class LightPoints : MonoBehaviour
     private GameObject canvasObject;
     private RectTransform fillRect;
     private Text label;
+    private GameObject deathMessageObject;
 
     private void Awake()
     {
@@ -74,12 +95,72 @@ public class LightPoints : MonoBehaviour
 
     private void Update()
     {
+        if (IsDead) return;
+
         IsInSunZone = EvaluateSunZones();
 
         float rate = IsInSunZone ? regenPerSecond : -drainPerSecond;
         Current = Mathf.Clamp(Current + rate * Time.deltaTime, 0f, Max);
 
         UpdateBar();
+
+        if (Current <= 0f) Die();
+    }
+
+    // ---------------------------------------------------------------- death
+
+    private void Die()
+    {
+        IsDead = true;
+        IsInSunZone = false;
+        contacts.Clear();
+
+        if (deathMessageObject != null) deathMessageObject.SetActive(true);
+
+        if (freezePhysicsOnDeath) FreezeBody();
+        if (disableOtherScripts) DisableOtherScripts();
+
+        onDeath?.Invoke();
+    }
+
+    private void FreezeBody()
+    {
+        Rigidbody body = GetComponent<Rigidbody>();
+        if (body != null)
+        {
+            if (!body.isKinematic)
+            {
+#if UNITY_6000_0_OR_NEWER
+                body.linearVelocity = Vector3.zero;
+#else
+                body.velocity = Vector3.zero;
+#endif
+                body.angularVelocity = Vector3.zero;
+            }
+            body.constraints = RigidbodyConstraints.FreezeAll;
+        }
+
+        Rigidbody2D body2D = GetComponent<Rigidbody2D>();
+        if (body2D != null)
+        {
+#if UNITY_6000_0_OR_NEWER
+            body2D.linearVelocity = Vector2.zero;
+#else
+            body2D.velocity = Vector2.zero;
+#endif
+            body2D.angularVelocity = 0f;
+            body2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
+    }
+
+    private void DisableOtherScripts()
+    {
+        foreach (MonoBehaviour behaviour in GetComponents<MonoBehaviour>())
+        {
+            if (behaviour == this) continue;
+            if (keepEnabled != null && System.Array.IndexOf(keepEnabled, behaviour) >= 0) continue;
+            behaviour.enabled = false;
+        }
     }
 
     // ---------------------------------------------------------------- contacts
@@ -173,6 +254,28 @@ public class LightPoints : MonoBehaviour
         label.color = Color.white;
         label.raycastTarget = false;
         labelRect.gameObject.AddComponent<Outline>();
+
+        // Death message: full-screen dim overlay with centered text.
+        // Created last so it draws on top of the bar; hidden until the player dies.
+        RectTransform deathRect = CreateRect("Death Message", canvasObject.transform);
+        deathMessageObject = deathRect.gameObject;
+        Stretch(deathRect);
+        Image dim = deathMessageObject.AddComponent<Image>();
+        dim.color = new Color(0f, 0f, 0f, 0.6f);
+        dim.raycastTarget = false;
+
+        RectTransform deathTextRect = CreateRect("Text", deathRect);
+        Stretch(deathTextRect);
+        Text deathText = deathTextRect.gameObject.AddComponent<Text>();
+        deathText.font = GetDefaultFont();
+        deathText.fontSize = 64;
+        deathText.alignment = TextAnchor.MiddleCenter;
+        deathText.color = Color.white;
+        deathText.text = deathMessage;
+        deathText.raycastTarget = false;
+        deathTextRect.gameObject.AddComponent<Outline>();
+
+        deathMessageObject.SetActive(false);
     }
 
     private void UpdateBar()
