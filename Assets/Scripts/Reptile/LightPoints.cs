@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /// <summary>
@@ -8,8 +9,16 @@ using UnityEngine.UI;
 ///
 /// Creates a "Light Points" bar on screen that starts at 100%, drains at a
 /// fixed rate, and refills while the player touches any object that has a
-/// <see cref="SunZone"/> component. When it reaches 0 the player dies: a death
-/// message is shown and the player can no longer move.
+/// <see cref="SunZone"/> component.
+///
+/// - Running out of Light Points kills the player ("too cold").
+/// - With Overheat enabled the bar can go above 100%, and reaching 200% kills
+///   the player ("too hot").
+/// - After death a message is shown and the player can no longer move.
+///
+/// All settings (decrease/increase rates, Overheat toggle, both death messages,
+/// bar appearance, ...) are edited in the Inspector. Rates, the Overheat toggle
+/// and the death messages can also be changed while the game is running.
 ///
 /// Requirements: the player needs a Collider (or Collider2D) and, as usual for
 /// Unity physics events, a Rigidbody (or Rigidbody2D) on either the player or
@@ -20,12 +29,37 @@ using UnityEngine.UI;
 [AddComponentMenu("Light/Light Points")]
 public class LightPoints : MonoBehaviour
 {
-    [Header("Light Points (percent)")]
-    [Tooltip("Percent lost per second while NOT touching a sun zone.")]
-    [SerializeField] private float drainPerSecond = 5f;
+    [Header("Light Points (% points per second)")]
+    [Tooltip("Percentage points lost per second while NOT touching a sun zone.")]
+    [Min(0f)] [SerializeField] private float drainPerSecond = 5f;
 
-    [Tooltip("Percent gained per second while touching a sun zone (capped at 100%).")]
-    [SerializeField] private float regenPerSecond = 20f;
+    [Tooltip("Percentage points gained per second while touching a sun zone.")]
+    [Min(0f)] [SerializeField] private float regenPerSecond = 20f;
+
+    [Header("Overheat")]
+    [Tooltip("If enabled, Light Points can go above 100%. Reaching 200% kills the player.")]
+    [SerializeField] private bool overheat = false;
+
+    [Header("Death messages")]
+    [Tooltip("Shown when Light Points run out.")]
+    [FormerlySerializedAs("deathMessage")]
+    [TextArea(1, 3)] [SerializeField] private string coldDeathMessage = "You got too cold and died";
+
+    [Tooltip("Shown when Light Points reach 200% (only with Overheat).")]
+    [TextArea(1, 3)] [SerializeField] private string hotDeathMessage = "You got too hot and died";
+
+    [Header("On death")]
+    [Tooltip("Disable every other script on this object (movement, input, etc.) so the player can't move.")]
+    [SerializeField] private bool disableOtherScripts = true;
+
+    [Tooltip("Scripts on this object that should keep running after death.")]
+    [SerializeField] private MonoBehaviour[] keepEnabled;
+
+    [Tooltip("Zero the Rigidbody/Rigidbody2D velocity and freeze it in place.")]
+    [SerializeField] private bool freezePhysicsOnDeath = true;
+
+    [Tooltip("Invoked once when the player dies.")]
+    public UnityEvent onDeath = new UnityEvent();
 
     [Header("Bar appearance")]
     [SerializeField] private Vector2 barSize = new Vector2(300f, 28f);
@@ -33,31 +67,32 @@ public class LightPoints : MonoBehaviour
     [SerializeField] private Vector2 barMargin = new Vector2(20f, 20f);
     [SerializeField] private Color backgroundColor = new Color(0f, 0f, 0f, 0.6f);
     [SerializeField] private Color fillColor = new Color(1f, 0.85f, 0.2f, 1f);
+    [Tooltip("Color of the part of the bar above 100% (only visible with Overheat).")]
+    [SerializeField] private Color overheatColor = new Color(1f, 0.35f, 0.1f, 1f);
 
-    [Header("Death")]
-    [SerializeField] private string deathMessage = "You got too cold and died";
-
-    [Tooltip("On death, disable every other script on this object (movement, input, etc.) so the player can't move.")]
-    [SerializeField] private bool disableOtherScripts = true;
-
-    [Tooltip("Scripts on this object that should keep running after death.")]
-    [SerializeField] private MonoBehaviour[] keepEnabled;
-
-    [Tooltip("On death, zero the Rigidbody/Rigidbody2D velocity and freeze it in place.")]
-    [SerializeField] private bool freezePhysicsOnDeath = true;
-
-    [Tooltip("Invoked once when the player runs out of Light Points.")]
-    public UnityEvent onDeath = new UnityEvent();
-
+    /// <summary>Normal maximum: 100%.</summary>
     public const float Max = 100f;
 
-    /// <summary>Current Light Points, 0 to 100.</summary>
+    /// <summary>Death-by-heat threshold when Overheat is enabled: 200%.</summary>
+    public const float OverheatMax = 200f;
+
+    /// <summary>Current Light Points in percent (0 to 100, or up to 200 with Overheat).</summary>
     public float Current { get; private set; } = Max;
+
+    /// <summary>The highest value Current can reach right now (100, or 200 with Overheat).</summary>
+    public float CurrentMax => overheat ? OverheatMax : Max;
+
+    /// <summary>Whether Overheat is enabled. Can be changed at runtime.</summary>
+    public bool OverheatEnabled
+    {
+        get => overheat;
+        set => overheat = value;
+    }
 
     /// <summary>True while the player is touching at least one active sun zone.</summary>
     public bool IsInSunZone { get; private set; }
 
-    /// <summary>True once the player has run out of Light Points.</summary>
+    /// <summary>True once the player has died (too cold or too hot).</summary>
     public bool IsDead { get; private set; }
 
     // Every sun-zone collider currently touching the player, mapped to its SunZone.
@@ -66,8 +101,11 @@ public class LightPoints : MonoBehaviour
 
     private GameObject canvasObject;
     private RectTransform fillRect;
+    private RectTransform overheatFillRect;
+    private GameObject markerObject;
     private Text label;
     private GameObject deathMessageObject;
+    private Text deathText;
 
     private void Awake()
     {
@@ -100,21 +138,26 @@ public class LightPoints : MonoBehaviour
         IsInSunZone = EvaluateSunZones();
 
         float rate = IsInSunZone ? regenPerSecond : -drainPerSecond;
-        Current = Mathf.Clamp(Current + rate * Time.deltaTime, 0f, Max);
+        // CurrentMax also pulls the value back to 100 if Overheat gets switched off.
+        Current = Mathf.Clamp(Current + rate * Time.deltaTime, 0f, CurrentMax);
 
         UpdateBar();
 
-        if (Current <= 0f) Die();
+        if (Current <= 0f)
+            Die(coldDeathMessage);
+        else if (overheat && Current >= OverheatMax)
+            Die(hotDeathMessage);
     }
 
     // ---------------------------------------------------------------- death
 
-    private void Die()
+    private void Die(string message)
     {
         IsDead = true;
         IsInSunZone = false;
         contacts.Clear();
 
+        if (deathText != null) deathText.text = message;
         if (deathMessageObject != null) deathMessageObject.SetActive(true);
 
         if (freezePhysicsOnDeath) FreezeBody();
@@ -215,7 +258,7 @@ public class LightPoints : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) => AddContact(collision.collider);
     private void OnCollisionExit2D(Collision2D collision) => RemoveContact(collision.collider);
 
-    // ---------------------------------------------------------------- UI
+    // ---------------------------------------------------------------- bar UI
 
     private void BuildBar()
     {
@@ -237,12 +280,31 @@ public class LightPoints : MonoBehaviour
         background.color = backgroundColor;
         background.raycastTarget = false;
 
-        // Fill: resized by changing its right anchor.
+        // Fill up to 100%: resized by changing its right anchor.
         fillRect = CreateRect("Fill", bar);
         Stretch(fillRect);
         Image fill = fillRect.gameObject.AddComponent<Image>();
         fill.color = fillColor;
         fill.raycastTarget = false;
+
+        // Fill above 100% (Overheat): its left/right anchors are set in UpdateBar.
+        overheatFillRect = CreateRect("Overheat Fill", bar);
+        overheatFillRect.offsetMin = overheatFillRect.offsetMax = Vector2.zero;
+        Image overheatFill = overheatFillRect.gameObject.AddComponent<Image>();
+        overheatFill.color = overheatColor;
+        overheatFill.raycastTarget = false;
+
+        // Thin line marking 100% while Overheat is enabled (the bar then spans 0-200%).
+        RectTransform marker = CreateRect("100% Marker", bar);
+        markerObject = marker.gameObject;
+        marker.anchorMin = new Vector2(0.5f, 0f);
+        marker.anchorMax = new Vector2(0.5f, 1f);
+        marker.pivot = new Vector2(0.5f, 0.5f);
+        marker.sizeDelta = new Vector2(2f, 0f);
+        marker.anchoredPosition = Vector2.zero;
+        Image markerImage = markerObject.AddComponent<Image>();
+        markerImage.color = new Color(1f, 1f, 1f, 0.8f);
+        markerImage.raycastTarget = false;
 
         // Text label centered on the bar.
         RectTransform labelRect = CreateRect("Label", bar);
@@ -266,12 +328,11 @@ public class LightPoints : MonoBehaviour
 
         RectTransform deathTextRect = CreateRect("Text", deathRect);
         Stretch(deathTextRect);
-        Text deathText = deathTextRect.gameObject.AddComponent<Text>();
+        deathText = deathTextRect.gameObject.AddComponent<Text>();
         deathText.font = GetDefaultFont();
         deathText.fontSize = 64;
         deathText.alignment = TextAnchor.MiddleCenter;
         deathText.color = Color.white;
-        deathText.text = deathMessage;
         deathText.raycastTarget = false;
         deathTextRect.gameObject.AddComponent<Outline>();
 
@@ -280,7 +341,18 @@ public class LightPoints : MonoBehaviour
 
     private void UpdateBar()
     {
-        fillRect.anchorMax = new Vector2(Current / Max, 1f);
+        // The bar spans 0-100%, or 0-200% while Overheat is enabled.
+        float span = overheat ? OverheatMax : Max;
+        float normalPart = Mathf.Min(Current, Max) / span;
+        float overPart = Mathf.Max(0f, Current - Max) / span;
+        float hundredMark = Max / span;
+
+        fillRect.anchorMax = new Vector2(normalPart, 1f);
+        overheatFillRect.anchorMin = new Vector2(hundredMark, 0f);
+        overheatFillRect.anchorMax = new Vector2(hundredMark + overPart, 1f);
+
+        if (markerObject.activeSelf != overheat) markerObject.SetActive(overheat);
+
         label.text = "Light Points " + Mathf.CeilToInt(Current) + "%";
     }
 

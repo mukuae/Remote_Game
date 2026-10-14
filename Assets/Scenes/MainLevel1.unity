@@ -5594,10 +5594,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LightPoints
   drainPerSecond: 5
   regenPerSecond: 25
+  overheat: 1
+  coldDeathMessage: You got too cold and died
+  hotDeathMessage: You got too hot and died
+  disableOtherScripts: 1
+  keepEnabled: []
+  freezePhysicsOnDeath: 1
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
   barSize: {x: 300, y: 28}
   barMargin: {x: 20, y: 20}
   backgroundColor: {r: 0, g: 0, b: 0, a: 0.6}
   fillColor: {r: 1, g: 0.85, b: 0.2, a: 1}
+  overheatColor: {r: 1, g: 0.35, b: 0.1, a: 1}
 --- !u!1 &2062732734
 GameObject:
   m_ObjectHideFlags: 0
