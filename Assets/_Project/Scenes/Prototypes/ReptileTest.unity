@@ -630,7 +630,7 @@ MonoBehaviour:
     m_Bits: 0
   groundCheckRadius: 0.3
   groundCheckDistance: 0.2
-  platformTag: Platform
+  platformTag: MovingPlatform
   moveAction: {fileID: 0}
   jumpAction: {fileID: 0}
   gravityMultiplier: 3

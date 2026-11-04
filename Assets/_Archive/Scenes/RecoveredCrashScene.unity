@@ -1886,7 +1886,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 823242f43426b824fac8da99f14f3470, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpiderClimb
+  m_EditorClassIdentifier: Assembly-CSharp::SpiderClimbing
   climbSpeed: 3.5
   rotationSpeed: 10
   surfaceDetectionRange: 1.2

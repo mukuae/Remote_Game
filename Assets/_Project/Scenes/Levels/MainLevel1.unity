@@ -1560,7 +1560,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66df8954e832f2f45be8650429ff1902, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExtendedTrigger
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTrigger
   triggerAnchor: {fileID: 0}
   triggerSizeXZ: {x: 8.13, y: 7.89}
   triggerHeightY: 5.25
@@ -4276,7 +4276,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66df8954e832f2f45be8650429ff1902, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExtendedTrigger
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTrigger
   triggerAnchor: {fileID: 0}
   triggerSizeXZ: {x: 8.13, y: 7.89}
   triggerHeightY: 5.25
@@ -5427,7 +5427,7 @@ MonoBehaviour:
     m_Bits: 0
   groundCheckRadius: 0.3
   groundCheckDistance: 0.2
-  platformTag: Platform
+  platformTag: MovingPlatform
   moveAction: {fileID: 0}
   jumpAction: {fileID: 0}
   gravityMultiplier: 3

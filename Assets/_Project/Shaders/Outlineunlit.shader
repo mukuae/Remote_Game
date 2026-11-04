@@ -1,9 +1,8 @@
 Shader "Custom/OutlineUnlit"
 {
-    // Built-in Render Pipeline shader. Renders only back faces in a flat
-    // colour — used by Outline.cs for the inverted-hull outline effect.
-    // If your project uses URP, let me know and I'll swap this for a
-    // Shader Graph / URP-compatible version instead.
+    // Renders only back faces in a flat colour - used by Outline.cs for the
+    // inverted-hull outline effect. The pass has no LightMode tag, so URP draws
+    // it as "SRPDefaultUnlit". Listed under Always Included Shaders.
 
     Properties
     {
