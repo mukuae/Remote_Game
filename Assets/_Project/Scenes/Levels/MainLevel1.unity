@@ -1395,6 +1395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e4a7098d179f0243b6b0fa8a0a378ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  mainMenuSceneIndex: 0
   pauseMenuUI: {fileID: 1238464825}
 --- !u!1 &528729205
 GameObject:
@@ -1572,9 +1573,7 @@ MonoBehaviour:
   pushImpulse: 150
   onlyHorizontal: 1
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
+  rechargeMode: 0
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -4288,9 +4287,7 @@ MonoBehaviour:
   pushImpulse: 150
   onlyHorizontal: 1
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 2
+  rechargeMode: 0
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -5389,8 +5386,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dcd901a42cfd644bad93c8aa5163bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeSlowAbility
-  activationKey: 102
+  toggleKey: 20
   aimSource: {fileID: 0}
+  conePlane: 0
   rescanInterval: 0.5
   coneLength: 10
   coneAngle: 45
