@@ -1,0 +1,68 @@
+# How git treats each file type in this Unity project.
+
+# Text files: git detects them automatically and normalizes line endings.
+* text=auto
+
+# Unity scenes and assets (text-serialized). They are merged with Unity's Smart Merge tool
+# (UnityYAMLMerge) once each teammate has set it up once - see MERGE_NOTES.md.
+# Without that setup git simply uses its normal merge. Binary .asset files (e.g. lighting data)
+# are still detected as binary automatically.
+*.unity              merge=unityyamlmerge
+*.prefab             merge=unityyamlmerge
+*.asset              merge=unityyamlmerge
+*.mat                merge=unityyamlmerge
+*.anim               merge=unityyamlmerge
+*.controller         merge=unityyamlmerge
+*.overrideController merge=unityyamlmerge
+*.mask               merge=unityyamlmerge
+*.mixer              merge=unityyamlmerge
+*.physicMaterial     merge=unityyamlmerge
+*.brush              merge=unityyamlmerge
+*.terrainlayer       merge=unityyamlmerge
+*.lighting           merge=unityyamlmerge
+*.meta               text
+
+# Binary files: never diff, merge or change line endings.
+# Images
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.tga  binary
+*.psd  binary
+*.tif  binary
+*.tiff binary
+*.exr  binary
+*.hdr  binary
+*.gif  binary
+*.bmp  binary
+# 3D models
+*.fbx    binary
+*.blend  binary
+*.blend1 binary
+*.dae    binary
+*.3ds    binary
+*.usd    binary
+*.usdz   binary
+# Audio / video
+*.mp3  binary
+*.wav  binary
+*.ogg  binary
+*.aif  binary
+*.aiff binary
+*.flac binary
+*.mp4  binary
+*.mov  binary
+# Fonts and other
+*.ttf  binary
+*.otf  binary
+*.dll  binary
+*.so   binary
+*.a    binary
+*.pdf  binary
+*.zip  binary
+*.7z   binary
+*.unitypackage binary
+
+# Git LFS (large files) - prepared but OFF. Turning it on is a team decision:
+# everyone needs Git LFS installed. To enable, replace "binary" above with
+# "filter=lfs diff=lfs merge=lfs -text" for the large types (e.g. *.fbx, *.exr, *.psd, *.wav).
