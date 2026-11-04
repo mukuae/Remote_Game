@@ -2620,6 +2620,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -985886039457523850, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1303153297}
+    - targetCorrespondingSourceObject: {fileID: -985886039457523850, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1303153299}
   m_SourcePrefab: {fileID: 100100000, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
 --- !u!1 &872850589 stripped
 GameObject:
@@ -4097,6 +4100,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6416487109790020563, guid: 513eed30585f8bd4bb85792eb1564622, type: 3}
+--- !u!114 &1303153299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872850590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1481dc5c5a3f8ba428cd4acdb95c400f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClimbableWall
 --- !u!1 &1307527701
 GameObject:
   m_ObjectHideFlags: 0
@@ -5370,6 +5385,7 @@ GameObject:
   - component: {fileID: 2055453406}
   - component: {fileID: 2055453405}
   - component: {fileID: 2055453413}
+  - component: {fileID: 2055453414}
   m_Layer: 0
   m_Name: Simple_Character
   m_TagString: Player
@@ -5608,6 +5624,37 @@ MonoBehaviour:
   backgroundColor: {r: 0, g: 0, b: 0, a: 0.6}
   fillColor: {r: 1, g: 0.85, b: 0.2, a: 1}
   overheatColor: {r: 1, g: 0.35, b: 0.1, a: 1}
+--- !u!114 &2055453414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055453404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3a1dd160c3b3c54fadce8df7552c6e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallClimb
+  grabKey: 114
+  upKey: 101
+  downKey: 113
+  leftKey: 97
+  rightKey: 100
+  grabDistance: 0.6
+  surfaceLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  climbSpeed: 3
+  faceWall: 1
+  disableWhileClinging: []
+  dimension: 0
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onRelease:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2062732734
 GameObject:
   m_ObjectHideFlags: 0
