@@ -228,11 +228,26 @@ public static class WallClimbSelfTest
         Press(Key.D);
         yield return WaitUntil(() => climb.IsClimbing, 2f);
         Check("Grabs side wall by walking right", climb.IsClimbing, $"pos={player.transform.position}");
-        // Still holding D: on a wall running towards the camera that must not push the player out of the lane.
-        Press(Key.W, Key.D);
-        yield return Wait(0.5f);
-        Check("A/D don't leave the lane on the side wall", Mathf.Abs(player.transform.position.z - lane) < 0.3f,
-            $"z={player.transform.position.z:F2}, lane={lane:F2}");
+        // A/D move along this wall too, independent of the camera.
+        // Facing this wall (world -X), the player's right is world +Z.
+        Press(Key.W);
+        yield return Wait(0.3f);
+        Vector3 sideStart = player.transform.position;
+        Press(Key.D);
+        yield return Wait(0.4f);
+        Press();
+        yield return Wait(0.1f);
+        Vector3 sideRight = player.transform.position;
+        Check("D moves right along the side wall", climb.IsClimbing && sideRight.z > sideStart.z + 0.5f,
+            $"climbing={climb.IsClimbing}, {sideStart} -> {sideRight}");
+        Press(Key.A);
+        yield return Wait(0.4f);
+        Press();
+        yield return Wait(0.1f);
+        Vector3 sideLeft = player.transform.position;
+        Check("A moves left along the side wall", climb.IsClimbing && sideLeft.z < sideRight.z - 0.5f,
+            $"climbing={climb.IsClimbing}, {sideRight} -> {sideLeft}");
+        Press(Key.W);
         yield return WaitUntil(() => !climb.IsClimbing, 5f);
         Press();
         yield return Wait(0.5f);

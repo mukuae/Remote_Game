@@ -43,7 +43,7 @@ public class WallClimb : MonoBehaviour
     [Header("Climbing")]
     [SerializeField] private float climbSpeed = 3f;
     [SerializeField] private float sidewaysSpeed = 2.5f;
-    [Tooltip("Left/right input moves the player sideways along the wall (towards screen-left/right).")]
+    [Tooltip("Left/right input moves the player sideways along the wall (to the player's left/right while facing it), regardless of the camera.")]
     [SerializeField] private bool allowSidewaysClimbing = true;
     [Tooltip("How far in front of the player a wall can be to grab it.")]
     [SerializeField] private float grabDistance = 0.25f;
@@ -299,19 +299,16 @@ public class WallClimb : MonoBehaviour
         FaceWall();
     }
 
-    // Left/right input moves the player towards screen-right along the wall.
-    // Not normalized on purpose: on a wall facing the camera this is full speed, on a wall that
-    // runs towards the camera it shrinks to ~zero, so side-view players can't leave the play plane.
+    // The player's right along the wall, as seen while facing the wall.
+    // Independent of the camera: D always moves right, A always left, on every wall.
     private Vector3 SidewaysDirection()
     {
-        Transform reference = cameraTransform != null ? cameraTransform : transform;
-        Vector3 screenRight = reference.right;
-        screenRight.y = 0f;
-        screenRight.Normalize();
+        Vector3 facing = -wallNormal;
+        facing.y = 0f;
+        if (facing.sqrMagnitude < 0.0001f)
+            return Vector3.zero;
 
-        Vector3 alongWall = Vector3.ProjectOnPlane(screenRight, wallNormal);
-        alongWall.y = 0f;
-        return alongWall;
+        return Vector3.Cross(Vector3.up, facing.normalized);
     }
 
     private bool ProbeWall(Vector3 origin, float distance, out RaycastHit hit)

@@ -106,7 +106,7 @@ public static class WallClimbTestLevelBuilder
         climb.FindProperty("jumpAction").objectReferenceValue = controller.FindProperty("jumpAction").objectReferenceValue;
         climb.FindProperty("animator").objectReferenceValue = controller.FindProperty("animator").objectReferenceValue;
         climb.FindProperty("abilityUnlocked").boolValue = false;       // unlocked by the pickup
-        climb.FindProperty("allowSidewaysClimbing").boolValue = true;  // A/D move along walls facing the camera
+        climb.FindProperty("allowSidewaysClimbing").boolValue = true;  // A/D move along the wall
         climb.ApplyModifiedPropertiesWithoutUndo();
 
         PlayerRespawn respawn = player.GetComponent<PlayerRespawn>();
@@ -178,7 +178,7 @@ public static class WallClimbTestLevelBuilder
         GameObject side = Box("5_SideClimbableWall", course,
             new Vector3(SideWallFaceX - 1f, SideWallHeight * 0.5f, LaneZ - 1f), new Vector3(2f, SideWallHeight, 8f), climbable);
         side.AddComponent<ClimbableWall>();
-        Label(course, "5  Walk right into it,\nthen hold W to climb", new Vector3(SideWallFaceX + 2.5f, 5.4f, LaneZ));
+        Label(course, "5  Walk right into it,\nclimb with W A S D", new Vector3(SideWallFaceX + 2.5f, 5.4f, LaneZ));
     }
 
     private static void BackWall(string name, Transform parent, float x, float height, Material material, bool isClimbable)
