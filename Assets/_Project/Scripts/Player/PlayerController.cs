@@ -334,6 +334,20 @@ public class PlayerController : MonoBehaviour
         platformContactTimer = 0f;
     }
 
+    // Clears all built-up motion. Used by WallClimb when handing control back, so the player
+    // doesn't resume the fall speed they had before grabbing the wall.
+    public void ResetMotion()
+    {
+        velocity = Vector3.zero;
+        currentMoveVelocity = Vector3.zero;
+        externalVelocity = Vector3.zero;
+        jumpBufferCounter = 0f;
+        coyoteTimeCounter = 0f;
+        currentPlatform = null;
+        platformVelocity = Vector3.zero;
+        platformContactTimer = 0f;
+    }
+
     private void LockTo2DPlane()
     {
         if (!twoDimensionalMovement)

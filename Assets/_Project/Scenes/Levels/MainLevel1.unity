@@ -1395,6 +1395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e4a7098d179f0243b6b0fa8a0a378ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  mainMenuSceneIndex: 0
   pauseMenuUI: {fileID: 1238464825}
 --- !u!1 &528729205
 GameObject:
@@ -1572,9 +1573,7 @@ MonoBehaviour:
   pushImpulse: 150
   onlyHorizontal: 1
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
+  rechargeMode: 0
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -4288,9 +4287,7 @@ MonoBehaviour:
   pushImpulse: 150
   onlyHorizontal: 1
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 2
+  rechargeMode: 0
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -5370,6 +5367,7 @@ GameObject:
   - component: {fileID: 2055453406}
   - component: {fileID: 2055453405}
   - component: {fileID: 2055453413}
+  - component: {fileID: 2055453414}
   m_Layer: 0
   m_Name: Simple_Character
   m_TagString: Player
@@ -5389,8 +5387,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dcd901a42cfd644bad93c8aa5163bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeSlowAbility
-  activationKey: 102
+  toggleKey: 20
   aimSource: {fileID: 0}
+  conePlane: 0
   rescanInterval: 0.5
   coneLength: 10
   coneAngle: 45
@@ -5608,6 +5607,29 @@ MonoBehaviour:
   backgroundColor: {r: 0, g: 0, b: 0, a: 0.6}
   fillColor: {r: 1, g: 0.85, b: 0.2, a: 1}
   overheatColor: {r: 1, g: 0.35, b: 0.1, a: 1}
+--- !u!114 &2055453414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055453404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823242f43426b824fac8da99f14f3470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpiderClimbing
+  toggleKey: 38
+  climbForwardKey: 63
+  climbBackwardKey: 64
+  climbSpeed: 4
+  rotationSpeed: 10
+  surfaceDetectionRange: 1.2
+  climbableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  stickyForce: 20
+  movementScriptToDisable: {fileID: 0}
 --- !u!1 &2062732734
 GameObject:
   m_ObjectHideFlags: 0
