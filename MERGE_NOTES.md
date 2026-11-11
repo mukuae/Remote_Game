@@ -94,3 +94,36 @@ Smart Merge still can't solve two people changing the *same object in the same s
 edits which scene, or use prefabs.
 
 Git LFS (for large files) is prepared in `.gitattributes` but switched off - that's a team decision.
+
+## Using Claude Code on this project
+
+Nobody *needs* Claude Code to work on the game. If you want to use it (Windows, PowerShell, no admin):
+
+```powershell
+# 1. Optional but recommended: Git for Windows (gives Claude a Bash shell; without it Claude uses PowerShell)
+winget install --id Git.Git -e
+
+# 2. Install Claude Code
+irm https://claude.ai/install.ps1 | iex
+
+# 3. Close and reopen PowerShell, then check the install
+claude --version
+claude doctor
+
+# 4. Start it inside the project folder
+cd "C:\path\to\Remote_Game"
+claude
+```
+
+- **Login:** the first start opens the browser. Use **your own** account: a Claude Pro/Max subscription
+  or an Anthropic Console account (the free claude.ai plan doesn't include Claude Code).
+  `/logout` signs out, `/status` shows which account is active.
+- **Don't share API keys** and never put one in the repository. If you prefer your own key over the
+  browser login: `setx ANTHROPIC_API_KEY "your-key"`, then reopen PowerShell. A set key takes priority
+  over a subscription login.
+- `CLAUDE.md` (project root) is read automatically and tells Claude how this project works and what
+  the team rules are. Add team decisions to its "Team decisions" section.
+- `.claude/settings.json` lets Claude run read-only commands (git status/log/diff, listing and reading
+  files) without asking; `git push` always asks.
+- Personal notes/settings go into `CLAUDE.local.md` and `.claude/settings.local.json` (both gitignored).
+- Type `/memory` in Claude to see which instruction files were loaded.
