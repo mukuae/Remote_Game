@@ -57,6 +57,10 @@ public class PlayerController : MonoBehaviour
     // Set by PogoTrigger while the player stands inside its volume.
     private PogoTrigger activePogoZone;
 
+    // Pogo pads used since the player last touched the ground (each pad once per jump).
+    private readonly System.Collections.Generic.HashSet<PogoTrigger> pogosUsedThisJump =
+        new System.Collections.Generic.HashSet<PogoTrigger>();
+
     // Grounded state from the main movement step. CharacterController.isGrounded only reflects the
     // most recent Move() call, and the moving-platform Move() earlier in the frame never touches the
     // ground - reading it directly made jumping off platforms impossible.
@@ -317,15 +321,46 @@ public class PlayerController : MonoBehaviour
         characterController.Move(finalVelocity * Time.deltaTime);
         isGrounded = characterController.isGrounded;
 
+        // Landing makes every pogo pad usable again.
+        if (isGrounded) pogosUsedThisJump.Clear();
+
         externalVelocity = Vector3.MoveTowards(externalVelocity, Vector3.zero, externalVelocityFadeSpeed * Time.deltaTime);
     }
 
+    // Pogo pads only work in the air, and each pad once per jump.
+    public bool CanUsePogo(PogoTrigger pad)
+    {
+        return !isGrounded && !pogosUsedThisJump.Contains(pad);
+    }
+
+    public bool HasUsedPogo(PogoTrigger pad)
+    {
+        return pogosUsedThisJump.Contains(pad);
+    }
+
+    // Used by PogoTrigger. height is in meters, like jumpHeight.
+    public void PogoLaunch(PogoTrigger pad, Vector3 horizontalDirection, float sidewaysSpeed, float height)
+    {
+        pogosUsedThisJump.Add(pad);
+        Launch(horizontalDirection, sidewaysSpeed, Mathf.Sqrt(height * -2f * Physics.gravity.y * gravityMultiplier));
+    }
+
+    // Used by WallClimb's wall jump: 'force' is both the sideways and the upward speed.
     public void PogoJump(Vector3 direction, float force)
     {
-        direction.Normalize();
+        Launch(direction, force, force);
+    }
 
-        externalVelocity = direction * force;
-        velocity.y = force;
+    // The upward speed goes into velocity.y, so gravity slows it down like a normal jump.
+    // Only the sideways push goes into externalVelocity (which ignores gravity and just fades out) -
+    // an upward externalVelocity kept lifting the player for seconds.
+    private void Launch(Vector3 horizontalDirection, float horizontalSpeed, float upwardSpeed)
+    {
+        horizontalDirection.y = 0f;
+        if (horizontalDirection.sqrMagnitude > 0.0001f) horizontalDirection.Normalize();
+
+        externalVelocity = horizontalDirection * horizontalSpeed;
+        velocity.y = upwardSpeed;
 
         jumpBufferCounter = 0f;
         coyoteTimeCounter = 0f;

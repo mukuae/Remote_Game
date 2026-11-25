@@ -41,8 +41,11 @@ Build Settings: `MainMenu` (0), `Levels/MainLevel1_V02` (1).
 - **PlayerController** (CharacterController): coyote time, jump buffer, moving platforms (tag
   `MovingPlatform` or a Rigidbody), optional 2D lock. Grounded state is cached after the main Move()
   (the platform Move() would otherwise break jumping off platforms).
-- **PogoTrigger**: registers itself with the player on enter; when Jump is pressed inside it,
-  `PlayerController` calls `PogoTrigger.TryLaunch` instead of jumping. Usable once per `RechargeMode`.
+- **PogoTrigger** (pogo pads): only works when Jump is pressed **in the air** inside the pad
+  (on the ground Jump is a normal jump). Each pad once per jump; pads can be chained; landing resets
+  them (tracked in `PlayerController`). Launch = height in meters + sideways speed, defaults in
+  `LevelSettings` (pads can override). The upward part uses gravity (velocity.y), only the sideways
+  part goes into externalVelocity.
 - **Freeze ability** (`Scripts/Abilities/Freeze`): `FreezeAbility` on the player, `TimeControllable`
   on anything freezable (Animator, Rigidbody, or scripts reading `TimeControllable.DeltaTime` like
   `PlatformMover`). Press Freeze -> nearest target in front, Tab/LB next (front first, then behind),

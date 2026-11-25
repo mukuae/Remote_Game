@@ -37,6 +37,13 @@ public class LevelSettings : ScriptableObject
     [Tooltip("Flag colour once the checkpoint is reached.")]
     public Color checkpointActiveColor = new Color(0.2f, 0.9f, 0.35f);
 
+    [Header("Pogo (defaults for all pads - a pad can override them)")]
+    [Tooltip("How high a pogo launches the player, in meters (like the player's Jump Height).")]
+    [Min(0f)] public float pogoLaunchHeight = 4f;
+
+    [Tooltip("Sideways launch speed (m/s), away from the pad's reference point.")]
+    [Min(0f)] public float pogoSidewaysSpeed = 6f;
+
     [Header("Respawn")]
     [Tooltip("Default height below which the player respawns. Each level can override it on PlayerRespawn.")]
     public float defaultKillHeight = -10f;

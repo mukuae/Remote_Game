@@ -1,9 +1,11 @@
 using UnityEngine;
 
-// Trigger volume that launches the player when they press Jump while standing inside it.
-// The launch direction points away from (or toward) a reference point or line.
-// The jump input itself is read by PlayerController, which calls TryLaunch(), so a pogo
-// launch and a normal jump can never happen on the same button press.
+// Pogo pad: pressing Jump while IN THE AIR inside this trigger launches the player.
+// On the ground, Jump is always a normal jump.
+// Each pad can be used once per jump: it becomes usable again when the player lands.
+// Different pads can be chained (pogo from pad to pad).
+// The launch goes up by a set height, plus sideways away from (or toward) a reference point/line.
+// The jump input itself is read by PlayerController, which calls TryLaunch().
 [RequireComponent(typeof(BoxCollider))]
 public class PogoTrigger : MonoBehaviour
 {
@@ -11,13 +13,6 @@ public class PogoTrigger : MonoBehaviour
     {
         Point,
         Line
-    }
-
-    public enum RechargeMode
-    {
-        OnLanding,   // one launch, usable again once the player touches the ground
-        OnReentry,   // one launch, usable again after leaving and re-entering the trigger
-        Never        // one launch for the whole level
     }
 
     [Header("Anchor")]
@@ -44,16 +39,18 @@ public class PogoTrigger : MonoBehaviour
     [Tooltip("Line end, relative to the center of the green trigger.")]
     public Vector3 lineLocalEnd = new Vector3(0.5f, 0f, 0f);
 
-    [Header("Impulse")]
-    public float pushImpulse = 10f;
-    public bool onlyHorizontal = true;
+    [Header("Launch")]
+    [Tooltip("Use this pad's own values below instead of the defaults in LevelSettings.")]
+    public bool overrideLaunch = false;
+
+    [Tooltip("How high the launch goes, in meters (like the player's Jump Height).")]
+    [Min(0f)] public float launchHeight = 4f;
+
+    [Tooltip("Sideways launch speed (m/s), away from the reference point/line.")]
+    [Min(0f)] public float sidewaysSpeed = 6f;
+
+    [Tooltip("Launch sideways towards the reference instead of away from it.")]
     public bool moveTowardReference = false;
-
-    [Header("Usage")]
-    [Tooltip("The pogo can only be used once; this decides when it becomes usable again.")]
-    public RechargeMode rechargeMode = RechargeMode.OnLanding;
-
-    public bool IsUsedUp { get; private set; }
 
     [Header("Gizmos")]
     public bool showGizmo = true;
@@ -87,24 +84,24 @@ public class PogoTrigger : MonoBehaviour
     }
 
     // Called by PlayerController when Jump is pressed inside this trigger.
-    // Returns false if the pogo is used up or no sensible launch direction exists
-    // (the press is then handled as a normal jump).
+    // Returns false if the player is on the ground or already used this pad during the current
+    // jump - the press is then handled as a normal jump.
     public bool TryLaunch(PlayerController player)
     {
-        if (IsUsedUp && rechargeMode == RechargeMode.OnLanding && player.IsGrounded)
-            IsUsedUp = false;
-
-        if (IsUsedUp) return false;
+        if (!player.CanUsePogo(this)) return false;
 
         Vector3 playerPosition = player.transform.position;
         Vector3 direction = playerPosition - GetReferencePosition(playerPosition);
 
-        if (onlyHorizontal) direction.y = 0f;
+        direction.y = 0f;
         if (moveTowardReference) direction = -direction;
-        if (direction.sqrMagnitude < 1e-6f) return false;
+        if (direction.sqrMagnitude < 1e-6f) direction = Vector3.zero; // right on the reference: straight up
 
-        player.PogoJump(direction.normalized, pushImpulse);
-        IsUsedUp = true;
+        LevelSettings settings = LevelSettings.Instance;
+        float height = overrideLaunch ? launchHeight : settings.pogoLaunchHeight;
+        float sideways = overrideLaunch ? sidewaysSpeed : settings.pogoSidewaysSpeed;
+
+        player.PogoLaunch(this, direction, sideways, height);
         return true;
     }
 
@@ -137,7 +134,8 @@ public class PogoTrigger : MonoBehaviour
         triggerSizeXZ.x = Mathf.Max(0.01f, triggerSizeXZ.x);
         triggerSizeXZ.y = Mathf.Max(0.01f, triggerSizeXZ.y);
         triggerHeightY = Mathf.Max(0.01f, triggerHeightY);
-        pushImpulse = Mathf.Max(0f, pushImpulse);
+        launchHeight = Mathf.Max(0f, launchHeight);
+        sidewaysSpeed = Mathf.Max(0f, sidewaysSpeed);
     }
 
     private Vector3 GetTriggerCenterWorld()
@@ -215,9 +213,6 @@ public class PogoTrigger : MonoBehaviour
         {
             currentPlayer.ExitPogoZone(this);
             currentPlayer = null;
-
-            if (rechargeMode == RechargeMode.OnReentry)
-                IsUsedUp = false;
         }
     }
 
@@ -259,8 +254,9 @@ public class PogoTrigger : MonoBehaviour
 
         Gizmos.matrix = transform.localToWorldMatrix;
 
-        // Grey while used up, so you can see the state in the Scene view during Play mode.
-        bool showUsed = Application.isPlaying && IsUsedUp;
+        // Grey while the player has used this pad during the current jump (Scene view, Play mode).
+        PlayerController player = Application.isPlaying ? FindPlayerForGizmo() : null;
+        bool showUsed = player != null && player.HasUsedPogo(this);
 
         Gizmos.color = showUsed ? new Color(0.5f, 0.5f, 0.5f, 0.25f) : gizmoTriggerFill;
         Gizmos.DrawCube(centerLocalPreview, size);
@@ -284,7 +280,7 @@ public class PogoTrigger : MonoBehaviour
             Gizmos.DrawSphere(refPoint, 0.15f);
 
             if (showPlayerVector)
-                DrawVector(refPoint, playerPosition, onlyHorizontal, moveTowardReference, gizmoVector);
+                DrawVector(refPoint, playerPosition, moveTowardReference, gizmoVector);
 
             return;
         }
@@ -303,14 +299,20 @@ public class PogoTrigger : MonoBehaviour
         Gizmos.DrawSphere(closest, 0.12f);
 
         if (showPlayerVector)
-            DrawVector(closest, playerPosition, onlyHorizontal, moveTowardReference, gizmoVector);
+            DrawVector(closest, playerPosition, moveTowardReference, gizmoVector);
     }
 
-    private void DrawVector(Vector3 refPos, Vector3 playerPos, bool horizontalOnly, bool towardRef, Color color)
+    // The player inside the trigger, or else any player in the scene (gizmos only).
+    private PlayerController FindPlayerForGizmo()
+    {
+        return currentPlayer != null ? currentPlayer : FindFirstObjectByType<PlayerController>();
+    }
+
+    private void DrawVector(Vector3 refPos, Vector3 playerPos, bool towardRef, Color color)
     {
         Vector3 direction = playerPos - refPos;
 
-        if (horizontalOnly) direction.y = 0f;
+        direction.y = 0f;
         if (towardRef) direction = -direction;
         if (direction.sqrMagnitude < 1e-8f) return;
 

@@ -578,12 +578,10 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 25
-  onlyHorizontal: 0
+  overrideLaunch: 0
+  launchHeight: 4
+  sidewaysSpeed: 6
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -1582,6 +1580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e4a7098d179f0243b6b0fa8a0a378ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  mainMenuSceneIndex: 0
   pauseMenuUI: {fileID: 1238464825}
 --- !u!114 &513269168
 MonoBehaviour:
@@ -1597,7 +1596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VolumeSettings
   myMixer: {fileID: 24100000, guid: a56e8bfad6d425d429f52d00e5b584a9, type: 2}
   musicSlider: {fileID: 2855263}
-  SFXSlider: {fileID: 654842688}
+  sfxSlider: {fileID: 654842688}
   masterSlider: {fileID: 1526371515}
 --- !u!1 &530435228
 GameObject:
@@ -1655,12 +1654,10 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 2
-  onlyHorizontal: 0
+  overrideLaunch: 0
+  launchHeight: 4
+  sidewaysSpeed: 6
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 2
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -1990,12 +1987,10 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 25
-  onlyHorizontal: 1
+  overrideLaunch: 0
+  launchHeight: 4
+  sidewaysSpeed: 6
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -4503,12 +4498,10 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 2
-  onlyHorizontal: 0
+  overrideLaunch: 0
+  launchHeight: 4
+  sidewaysSpeed: 6
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -4982,12 +4975,10 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 2
-  onlyHorizontal: 0
+  overrideLaunch: 0
+  launchHeight: 4
+  sidewaysSpeed: 6
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -5865,12 +5856,10 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 2
-  onlyHorizontal: 0
+  overrideLaunch: 0
+  launchHeight: 4
+  sidewaysSpeed: 6
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -6033,12 +6022,10 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 2
-  onlyHorizontal: 0
+  overrideLaunch: 0
+  launchHeight: 4
+  sidewaysSpeed: 6
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -6201,12 +6188,10 @@ MonoBehaviour:
   pointLocalOffset: {x: 0, y: 0, z: 0}
   lineLocalStart: {x: -0.5, y: 0, z: 0}
   lineLocalEnd: {x: 0.5, y: 0, z: 0}
-  pushImpulse: 2
-  onlyHorizontal: 0
+  overrideLaunch: 0
+  launchHeight: 4
+  sidewaysSpeed: 6
   moveTowardReference: 0
-  useVelocityChange: 1
-  clearVelocityBeforePush: 1
-  maxLaunchSpeed: 15
   showGizmo: 1
   gizmoTriggerFill: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoTriggerWire: {r: 0, g: 1, b: 0, a: 1}
@@ -6649,10 +6634,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   musicSource: {fileID: 947001215}
-  SFXSource: {fileID: 1720669600}
-  MainMenuTheme: {fileID: 8300000, guid: 308c3e458ff44a448888f26dd189ea2e, type: 3}
-  Click_On: {fileID: 8300000, guid: 1b4e81ff68463234db944b21e856f861, type: 3}
-  Click_off: {fileID: 8300000, guid: 6ec7ee4d0d45e1e43938646abd9968e5, type: 3}
+  sfxSource: {fileID: 1720669600}
+  mainMenuTheme: {fileID: 8300000, guid: 308c3e458ff44a448888f26dd189ea2e, type: 3}
+  clickOn: {fileID: 8300000, guid: 1b4e81ff68463234db944b21e856f861, type: 3}
+  clickOff: {fileID: 8300000, guid: 6ec7ee4d0d45e1e43938646abd9968e5, type: 3}
 --- !u!4 &2012093595
 Transform:
   m_ObjectHideFlags: 0
@@ -7480,6 +7465,7 @@ MonoBehaviour:
   acceleration: 50
   deceleration: 50
   rotationSpeed: 10
+  twoDimensionalMovement: 0
   jumpHeight: 2
   coyoteTime: 0.1
   jumpBufferTime: 0.2

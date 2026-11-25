@@ -50,8 +50,9 @@ Archived: `TimeSlowAbility`, `PendulumMovement` (replaced by the freeze ability)
 ## Bug fixes
 
 - You can now **jump off moving platforms** (grounded check was read after the platform movement).
-- Pogo: no more pogo + normal jump on the same press; a pogo can only be used once until you land
-  (`Recharge Mode` on each PogoTrigger).
+- Pogo pads: only work when you press Jump **in the air** over a pad; each pad once per jump
+  (pad-to-pad chaining is possible, landing resets them). Launch height (meters) and sideways speed
+  are set in `LevelSettings`; a pad can override them. Fixed: the player no longer floats/flies.
 - Pause: works again after returning to the menu; gameplay ignores input while paused.
 - Outline/cone shaders are in *Always Included Shaders* (they would have been missing in builds).
 - `PlayerControllerPhysics` used a tag that didn't exist (`Platform` -> `MovingPlatform`).
