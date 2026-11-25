@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream:Assets/_Recovery.meta
 guid: ca980c8729b79884d8d465c0576be5ed
 folderAsset: yes
+=======
+guid: 52bf8a6d05d2f1345a0eaa49607cca73
+>>>>>>> Stashed changes:Assets/_Project/Scenes/Prototypes/WallClimbTest.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
